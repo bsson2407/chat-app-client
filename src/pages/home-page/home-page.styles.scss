@@ -1,0 +1,10 @@
+.homepage {
+  display: flex;
+  height: 100vh;
+  max-height: 100vh;
+
+  &-main {
+    height: 100%;
+    width: 100%;
+  }
+}
