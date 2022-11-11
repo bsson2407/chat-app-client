@@ -1,7 +1,6 @@
-import { Backdrop, Dialog, DialogContent, Modal } from '@material-ui/core';
-import { url } from 'inspector';
+/* eslint-disable jsx-a11y/iframe-has-title */
+import { Backdrop, Modal } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import BaseModal from '../../chat-header/call-modal/base-model.component';
 import './fileMessage.styles.scss';
 
 const FileMessage = ({ fileUrl, message, fileLink }: any) => {
@@ -49,26 +48,12 @@ const FileMessage = ({ fileUrl, message, fileLink }: any) => {
           timeout: 500,
         }}
       >
-        <iframe style={{ height: '900px', width: '700px' }} src={file}></iframe>
+        <iframe
+          style={{ height: '900px', width: '700px' }}
+          src={file}
+          title=""
+        ></iframe>
       </Modal>
-      // <Dialog
-      //   open={viewFile}
-      //   onClose={handleCloseModal}
-      //   aria-labelledby="alert-dialog-title"
-      //   aria-describedby="alert-dialog-description"
-      // >
-      //   <DialogContent>
-      //     <form style={{ height: '900px', width: '700px' }}>
-      //       <div className="title">
-      //         <div className="close" onClick={() => handleCloseModal()}></div>
-      //       </div>
-      //       <iframe
-      //         style={{ height: '900px', width: '700px' }}
-      //         src={file}
-      //       ></iframe>
-      //     </form>
-      //   </DialogContent>
-      // </Dialog>
     );
   };
 
