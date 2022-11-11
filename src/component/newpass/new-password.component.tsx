@@ -21,7 +21,6 @@ const NewPassword = () => {
   const [repeatPass, setRepeatPass] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const email: any = localStorage.getItem('emailUserResetPass');
-  console.log(email);
   const onSubmit = (data: Password) => {
     if (pass === repeatPass) {
       if (pass.length < 8) {

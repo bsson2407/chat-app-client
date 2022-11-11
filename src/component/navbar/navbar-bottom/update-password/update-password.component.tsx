@@ -40,9 +40,6 @@ const UpdatePassword = ({ open, handleClose }: Update) => {
   const [repeatPass, setRepeatPass] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const onSubmit = async (data: Password) => {
-    console.log(pass);
-    console.log(userCurrent.password);
-
     if (pass === userCurrent.password) {
       if (newPass === repeatPass) {
         if (newPass.length < 8) {
@@ -56,11 +53,7 @@ const UpdatePassword = ({ open, handleClose }: Update) => {
             email: userCurrent.email,
             newPassword: data.password,
           };
-          dispatch(
-            updatePasswordRequest(newData, () => {
-              console.log('ok');
-            })
-          );
+          dispatch(updatePasswordRequest(newData, () => {}));
           handleClose();
         }
       } else {

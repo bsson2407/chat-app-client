@@ -108,7 +108,6 @@ const AddFriend = ({ open, handleClose }: any) => {
 
   useEffect(() => {
     socket.on('requestAddFriendSuccess', () => {
-      console.log('add_friend_success');
       setStatusResult({
         isFriend: false,
         isStranger: false,
@@ -139,8 +138,6 @@ const AddFriend = ({ open, handleClose }: any) => {
     });
 
     socket.on('cancelRequestAddFriendSuccessForSender', () => {
-      // console.log('cancelRequestAddFriendSuccess');
-
       setStatusResult({
         isFriend: false,
         requested: false,

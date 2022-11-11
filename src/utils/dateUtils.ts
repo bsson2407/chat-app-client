@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-concat */
 export const DAY_MILISECONDS = 86400000;
 export const HOURSE_MILISECONDS = 3600000;
 export const MINUTE_MILISECONDS = 60000;
@@ -46,7 +47,7 @@ export const dateUtils = {
     return time.setHours(0, 0, 0, 0) === currentTime.setHours(0, 0, 0, 0);
   },
   checkLeapYear: (year: any) => {
-    return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
+    return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
   },
 };
 

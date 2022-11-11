@@ -212,7 +212,7 @@ const CallModal = () => {
   };
 
   useEffect(() => {
-    let newAudio = new Audio('../../../../audio/ringring.mp3');
+    let newAudio = new Audio('images/audio/ringring.mp3');
     if (answer) {
       pauseAudio(newAudio);
     } else {

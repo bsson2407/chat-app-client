@@ -9,10 +9,8 @@ import {
   listFriend,
   EmailPass,
 } from '../types/UserTypes';
-import { User } from 'firebase/auth';
 
 import { Actions } from '../types/CommonTypes';
-import { AxiosError } from 'axios';
 
 // -------------- LOGIN
 export const loginUserRequest = (data: UserData, callback: any): Actions => {

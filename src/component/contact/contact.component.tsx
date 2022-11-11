@@ -6,7 +6,7 @@ import './contact.styles.scss';
 import Conversation from './conversation/conversation.component';
 import ListFriend from './list-friend/list-friend.component';
 const Contact = () => {
-  const { showChat, showFriends }: any = useSelector<RootState>(
+  const { showConversation, showFriends }: any = useSelector<RootState>(
     (state) => state.optionLayout
   );
   const [searchField, setSearchField] = useState('');
@@ -17,7 +17,7 @@ const Contact = () => {
   return (
     <div className="contact-container">
       <ContactHeader onChangeHandler={onSearchChange}></ContactHeader>
-      {showChat ? <Conversation /> : ''}
+      {showConversation ? <Conversation /> : ''}
       {showFriends ? <ListFriend /> : ''}
     </div>
   );

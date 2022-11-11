@@ -1,4 +1,3 @@
-import { async } from '@firebase/util';
 import { useState } from 'react';
 import OtpInput from 'react-otp-input';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,7 +7,7 @@ import {
   loginUserRequest,
 } from '../../redux/actions/UserAction';
 import { RootState } from '../../redux/reducers';
-import { Email, UserData, UserState } from '../../redux/types/UserTypes';
+import { Email, UserState } from '../../redux/types/UserTypes';
 import CountDown from '../otp/countDown.component';
 import './otp-register.styles.scss';
 
@@ -20,18 +19,14 @@ const OTPRegister = ({ password }: any) => {
   //   const { emailUserRegister }: { emailUserRegister: Email } = useSelector(
   //     (state: RootState) => state.user
   //   );
-  console.log(password);
   const { emailUserResetPass }: { emailUserResetPass: Email } = useSelector(
     (state: RootState) => state.user
   );
-  console.log('email', emailUserResetPass);
   const user: UserState = useSelector((state: RootState) => state.user);
   const { error } = user;
 
   const handleChange = (otp: string) => setOtp(otp);
-  const { checkOtp, userCurrent }: any = useSelector<RootState>(
-    (state) => state.user
-  );
+
   const getOtpValue = async () => {
     const data = {
       email: emailUserResetPass.email,

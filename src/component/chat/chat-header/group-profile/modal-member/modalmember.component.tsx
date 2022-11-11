@@ -1,29 +1,33 @@
 /* eslint-disable no-const-assign */
 import React, { useState } from 'react';
 import './modalmember.styles.scss';
-import { useForm } from 'react-hook-form';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 
-import Checkbox from '@material-ui/core/Checkbox';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../redux/reducers';
 import { listFriend } from '../../../../../redux/types/UserTypes';
-import { kickMemberOutGroupRequest } from '../../../../../redux/actions/ChatAction';
+import {
+  changeLeaderRequest,
+  kickMemberOutGroupRequest,
+} from '../../../../../redux/actions/ChatAction';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 
 const ModalMember = ({ open, handleClose }: any) => {
   const dispatch = useDispatch();
   const { chatWith }: any = useSelector<RootState>((state) => state.chat);
   const { userCurrent }: any = useSelector<RootState>((state) => state.user);
-  const [error, setError] = useState<string>('');
+  const [showMenu, setShowMenu] = useState<boolean>(false);
+  const [showId, setShowId] = useState<string>('');
 
   // const [initalFriend, setInitalFriend] = useState<any>([]);
-  const initalFriend: any = [];
-  const { handleSubmit } = useForm();
-
-  const { socket }: any = useSelector<RootState>((state) => state);
-  const { listFriend }: any = useSelector<RootState>((state) => state.user);
+  const handleShowMenu = (e: any) => {
+    console.log(e);
+    setShowMenu((a) => !a);
+    setShowId(e);
+  };
 
   const handleDeleteMemberOutGroup = (e: any) => {
     const data = {
@@ -31,8 +35,22 @@ const ModalMember = ({ open, handleClose }: any) => {
       userId: userCurrent._id,
       deleteUserId: e,
     };
+    // socket.emit(data.deleteUserId);
     dispatch(kickMemberOutGroupRequest(data));
-    socket.emit('kickMemberOutGroup', data);
+    // dispatch(getAllMessageByConversationRequest(chatWith.idConversation));
+    // dispatch(getUserByIdRequest(userCurrent._id));
+  };
+
+  const handleChangeLeaderGroup = (e: any) => {
+    const data = {
+      idConversation: chatWith.idConversation,
+      // userId: userCurrent._id,
+      idNewLeader: e,
+    };
+    // socket.emit(data.deleteUserId);
+    dispatch(changeLeaderRequest(data));
+    // dispatch(getAllMessageByConversationRequest(chatWith.idConversation));
+    // dispatch(getUserByIdRequest(userCurrent._id));
   };
 
   return (
@@ -59,24 +77,71 @@ const ModalMember = ({ open, handleClose }: any) => {
                     return (
                       <div className="list" key={friend._id}>
                         <div className="list_item">
-                          <div className="avatar">
-                            <img src={friend.idUser.avatar} alt=""></img>
+                          <div className="info">
+                            <div className="avatar">
+                              <img src={friend.idUser.avatar} alt=""></img>
+                            </div>
+                            <div className="name">{friend.idUser.name}</div>
                           </div>
-                          <div className="name">{friend.idUser.name}</div>
 
                           <div className="option">
                             {chatWith.leaderId === friend.idUser._id
                               ? 'Trưởng nhóm'
                               : chatWith.leaderId === userCurrent._id && (
-                                  <span
-                                    onClick={() =>
-                                      handleDeleteMemberOutGroup(
-                                        friend.idUser._id
-                                      )
-                                    }
-                                  >
-                                    <i className="fal fa-times"></i>
-                                  </span>
+                                  <>
+                                    <span
+                                      className="icon-leader"
+                                      onClick={() =>
+                                        handleShowMenu(friend.idUser._id)
+                                      }
+                                    >
+                                      <FontAwesomeIcon
+                                        className="icon"
+                                        icon={faEllipsisVertical}
+                                      />
+                                      {showMenu &&
+                                      showId === friend.idUser._id ? (
+                                        <div className="menu">
+                                          <div
+                                            className="menu-item"
+                                            onClick={() =>
+                                              handleChangeLeaderGroup(
+                                                friend.idUser._id
+                                              )
+                                            }
+                                          >
+                                            <span>Chuyển trưởng nhóm</span>
+                                          </div>
+                                          <div
+                                            className="menu-item"
+                                            onClick={() =>
+                                              handleDeleteMemberOutGroup(
+                                                friend.idUser._id
+                                              )
+                                            }
+                                          >
+                                            <span>Xóa khỏi nhóm</span>
+                                          </div>
+                                        </div>
+                                      ) : (
+                                        ''
+                                      )}
+                                    </span>
+                                    {/* <span
+                                      className="icon-delete"
+                                      onClick={() =>
+                                        handleDeleteMemberOutGroup(
+                                          friend.idUser._id
+                                        )
+                                      }
+                                    >
+                                      <FontAwesomeIcon
+                                        className="icon"
+                                        icon={faUserMinus}
+                                      />
+                                      <span>Xóa khỏi nhóm</span>
+                                    </span> */}
+                                  </>
                                 )}
                           </div>
                         </div>
@@ -86,10 +151,6 @@ const ModalMember = ({ open, handleClose }: any) => {
                 </div>
               </div>
             </div>
-          </div>
-
-          <div className="btn">
-            <div className="error">{error ? error : ''}</div>
           </div>
         </form>
       </DialogContent>

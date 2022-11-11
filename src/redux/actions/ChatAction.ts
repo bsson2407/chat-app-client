@@ -5,14 +5,12 @@ import { FriendItem, GroupItem, Message, UserTypes } from '../types/UserTypes';
 
 // --------------- GET ALL MESSAGE BY CONVERSATION
 export const getAllMessageByConversationRequest = (idConversation: string) => {
-  console.log(idConversation);
   return {
     type: ChatTypes.GET_ALL_MESSAGE_BY_CONVERSATION_REQUEST,
     payload: idConversation,
   };
 };
 export const getAllMessageByConversationSuccess = (data: IMessage[]) => {
-  console.log(data);
   return {
     type: ChatTypes.GET_ALL_MESSAGE_BY_CONVERSATION_SUCCESS,
     payload: data,
@@ -32,6 +30,15 @@ export const pushNewMesssgeToListMessage = (message: IMessage) => {
   };
 };
 
+export const pushNewConversationToListConversation = (
+  conversation: GroupItem
+) => {
+  return {
+    type: ChatTypes.PUSH_NEW_CONVERSATION_TO_LIST_CONVERSATION,
+    payload: conversation,
+  };
+};
+
 export const recallAMesssgeToListMessage = (message: IMessage) => {
   return {
     type: ChatTypes.RECALL_A_MESSAGE_TO_LIST_MESSAGE,
@@ -41,14 +48,12 @@ export const recallAMesssgeToListMessage = (message: IMessage) => {
 
 // --------------- DELETE MESSAGE ONLY ME
 export const deleteMessageOnlyMeRequest = (data: any) => {
-  console.log(data);
   return {
     type: ChatTypes.DELETE_MESSAGE_ONLY_ME_REQUEST,
     payload: data,
   };
 };
 export const deleteMessageOnlyMeSuccess = (data: IMessage) => {
-  console.log(data);
   return {
     type: ChatTypes.DELETE_MESSAGE_ONLY_ME_SUCCESS,
     payload: data,
@@ -69,7 +74,6 @@ export const deleteMessageAllMeRequest = (data: any) => {
   };
 };
 export const deleteMessageAllMeSuccess = (data: IMessage[]) => {
-  console.log(data);
   return {
     type: ChatTypes.DELETE_MESSAGE_ALL_ME_SUCCESS,
     payload: data,
@@ -90,7 +94,6 @@ export const getAllConversationByUserRequest = (id: string) => {
   };
 };
 export const getAllConversationByUserSuccess = (data: Conversation[]) => {
-  // console.log(data);
   return {
     type: ChatTypes.GET_ALL_CONVERSATION_BY_USER_SUCCESS,
     payload: data,
@@ -103,16 +106,38 @@ export const getAllConversationByUserFailure = (error: Message) => {
   };
 };
 
+// -------------- SEND MESSAGE
+export const sendMessagesRequest = (data: any) => {
+  return {
+    type: ChatTypes.SEND_MESSAGES_REQUEST,
+    payload: data,
+  };
+};
+export const sendMessagesSuccess = (data: IMessage) => {
+  getCurrentSocket().emit('sendMessage', data);
+  return {
+    type: ChatTypes.SEND_MESSAGES_SUCCESS,
+    payload: data,
+  };
+};
+export const sendMessagesFailure = (message: Message) => {
+  return {
+    type: ChatTypes.SEND_MESSAGES_FAILURE,
+    payload: message,
+  };
+};
+
 // -------------- UPDATE AVATAR
 export const sendImagesRequest = (data: any) => {
-  console.log(data);
   return {
     type: ChatTypes.SEND_IMAGES_REQUEST,
     payload: data,
   };
 };
 export const sendImagesSuccess = (data: IMessage) => {
-  getCurrentSocket().emit('send_message', data);
+  // getCurrentSocket().emit('send_message', data);
+  getCurrentSocket().emit('sendMessage', data);
+
   return {
     type: ChatTypes.SEND_IMAGES_SUCCESS,
     payload: data,
@@ -125,38 +150,15 @@ export const sendImagesFailure = (message: Message) => {
   };
 };
 
-// -------------- UPDATE AVATAR
-export const sendVideoRequest = (data: any) => {
-  console.log(data);
-  return {
-    type: ChatTypes.SEND_VIDEO_REQUEST,
-    payload: data,
-  };
-};
-export const sendVideoSuccess = (data: IMessage) => {
-  getCurrentSocket().emit('send_message', data);
-  return {
-    type: ChatTypes.SEND_VIDEO_SUCCESS,
-    payload: data,
-  };
-};
-export const sendVideoFailure = (message: Message) => {
-  return {
-    type: ChatTypes.SEND_VIDEO_FAILURE,
-    payload: message,
-  };
-};
-
 // -------------- SEND FILE
 export const sendFileRequest = (data: any) => {
-  console.log(data);
   return {
     type: ChatTypes.SEND_FILE_REQUEST,
     payload: data,
   };
 };
 export const sendFileSuccess = (data: IMessage) => {
-  getCurrentSocket().emit('send_message', data);
+  getCurrentSocket().emit('sendMessage', data);
   return {
     type: ChatTypes.SEND_FILE_SUCCESS,
     payload: data,
@@ -179,7 +181,6 @@ export const saveInfoChatWith = (friend: FriendItem | GroupItem) => {
 
 // --------------- SAVE INFO USER CURRENT CHATTING
 export const saveInfoChatGroup = (group: GroupItem) => {
-  console.log(group);
   return {
     type: ChatTypes.SAVE_INFO_CHAT_GROUP,
     payload: group,
@@ -188,14 +189,12 @@ export const saveInfoChatGroup = (group: GroupItem) => {
 
 // -------------- GET USER BY ID
 export const getConversationByIdRequest = (id: string) => {
-  console.log(id);
   return {
     type: UserTypes.GET_CONVERSATION_BY_ID_REQUEST,
     payload: id,
   };
 };
 export const getConversationByIdSuccess = (data: FriendItem | GroupItem) => {
-  console.log(data);
   return {
     type: UserTypes.GET_CONVERSATION_BY_ID_SUCCESS,
     payload: data,
@@ -216,7 +215,9 @@ export const addMemberToGroupRequest = (data: any) => {
   };
 };
 export const addMemberToGroupSuccess = (data: FriendItem | GroupItem) => {
-  data.idConversation = data._id;
+  // data.idConversation = data._id;
+  getCurrentSocket().emit('addMemberToGroup', data);
+
   return {
     type: ChatTypes.ADD_MEMBER_TO_GROUP_SUCCESS,
     payload: data,
@@ -231,15 +232,14 @@ export const addMemberToGroupFailure = (message: Message) => {
 
 // -------------- KICK MEMBER OUT GROUP
 export const kickMemberOutGroupRequest = (data: any) => {
-  console.log(data);
   return {
     type: ChatTypes.KICK_MEMBER_OUT_GROUP_REQUEST,
     payload: data,
   };
 };
 export const kickMemberOutGroupSuccess = (data: FriendItem | GroupItem) => {
-  console.log(data);
-  data.idConversation = data._id;
+  getCurrentSocket().emit('kickMemberOutGroup', data);
+
   return {
     type: ChatTypes.KICK_MEMBER_OUT_GROUP_SUCCESS,
     payload: data,
@@ -252,6 +252,112 @@ export const kickMemberOutGroupFailure = (message: Message) => {
   };
 };
 
+// -------------- CHANGE NAME GROUP
+export const changeNameGroupRequest = (data: any) => {
+  return {
+    type: ChatTypes.CHANGE_NAME_GROUP_REQUEST,
+    payload: data,
+  };
+};
+export const changeNameGroupSuccess = (data: GroupItem) => {
+  getCurrentSocket().emit('changeNameGroup', data);
+  return {
+    type: ChatTypes.CHANGE_NAME_GROUP_SUCCESS,
+    payload: data,
+  };
+};
+export const changeNameGroupFailure = (message: Message) => {
+  return {
+    type: ChatTypes.CHANGE_NAME_GROUP_FAILURE,
+    payload: message,
+  };
+};
+
+// -------------- CHANGE AVATAR GROUP
+export const changeAvatarGroupRequest = (data: any) => {
+  return {
+    type: ChatTypes.CHANGE_AVATAR_GROUP_REQUEST,
+    payload: data,
+  };
+};
+export const changeAvatarGroupSuccess = (data: GroupItem) => {
+  getCurrentSocket().emit('changeAvatarGroup', data);
+
+  return {
+    type: ChatTypes.CHANGE_AVATAR_GROUP_SUCCESS,
+    payload: data,
+  };
+};
+export const changeAvatarGroupFailure = (message: Message) => {
+  return {
+    type: ChatTypes.CHANGE_AVATAR_GROUP_FAILURE,
+    payload: message,
+  };
+};
+
+// -------------- CREATE GROUP
+export const createGroupRequest = (data: any) => {
+  return {
+    type: ChatTypes.CREATE_GROUP_REQUEST,
+    payload: data,
+  };
+};
+export const createGroupSuccess = (data: FriendItem | GroupItem) => {
+  getCurrentSocket().emit('createGroup', data);
+  return {
+    type: ChatTypes.CREATE_GROUP_SUCCESS,
+    payload: data,
+  };
+};
+export const createGroupFailure = (message: Message) => {
+  return {
+    type: ChatTypes.CREATE_GROUP_FAILURE,
+    payload: message,
+  };
+};
+
+// -------------- CHANGE LEADER
+export const changeLeaderRequest = (data: any) => {
+  return {
+    type: ChatTypes.CHANGE_LEADER_GROUP_REQUEST,
+    payload: data,
+  };
+};
+export const changeLeaderSuccess = (data: FriendItem | GroupItem) => {
+  getCurrentSocket().emit('changeLeader', data);
+  return {
+    type: ChatTypes.CHANGE_LEADER_GROUP_SUCCESS,
+    payload: data,
+  };
+};
+export const changeLeaderFailure = (message: Message) => {
+  return {
+    type: ChatTypes.CHANGE_LEADER_GROUP_FAILURE,
+    payload: message,
+  };
+};
+
+// -------------- CREATE GROUP
+export const deleteGroupRequest = (data: any) => {
+  return {
+    type: ChatTypes.DELETE_GROUP_REQUEST,
+    payload: data,
+  };
+};
+export const deleteGroupSuccess = (data: GroupItem) => {
+  getCurrentSocket().emit('deleteGroup', data);
+  return {
+    type: ChatTypes.DELETE_GROUP_SUCCESS,
+    payload: data,
+  };
+};
+export const deleteGroupFailure = (message: Message) => {
+  return {
+    type: ChatTypes.DELETE_GROUP_FAILURE,
+    payload: message,
+  };
+};
+
 // -------------- LEAVE GROUP
 export const leaveGroupRequest = (data: any) => {
   return {
@@ -260,6 +366,7 @@ export const leaveGroupRequest = (data: any) => {
   };
 };
 export const leaveGroupSuccess = (data: FriendItem | GroupItem) => {
+  getCurrentSocket().emit('leaveGroup', data);
   return {
     type: ChatTypes.LEAVE_GROUP_SUCCESS,
     payload: data,

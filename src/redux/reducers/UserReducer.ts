@@ -131,7 +131,6 @@ export const UserReducer = (state = initialState, action: UserLoginAction) => {
     }
 
     case UserTypes.GET_EMAIL_SUCCESS: {
-      console.log('f:', action.payload);
       return {
         ...state,
         isLoading: false,
@@ -243,7 +242,6 @@ export const UserReducer = (state = initialState, action: UserLoginAction) => {
 
     //-------------- UPDATE AVATAR REQUEST
     case UserTypes.UPDATE_AVATAR_REQUEST: {
-      console.log(1);
       return {
         ...state,
         isLoading: true,
@@ -271,11 +269,29 @@ export const UserReducer = (state = initialState, action: UserLoginAction) => {
       };
     }
     case UserTypes.GET_USER_BY_ID_SUCCESS: {
-      return {
-        ...state,
-        isLoading: false,
-        userCurrent: action.payload,
-      };
+      console.log('GET_USER_BY_ID_SUCCESS');
+      console.log(!state.userCurrent);
+      if (state.userCurrent) {
+        return {
+          ...state,
+          isLoading: false,
+          userCurrent: action.payload,
+        };
+      } else {
+        return {
+          ...state,
+          isLoading: false,
+        };
+      }
+      // console.log('GET_USER_BY_ID_SUCCESS', userData);
+      // console.log(
+      //   'GET_USER_BY_ID_SUCCESS',
+      //   state.userCurrent._id === userData._id
+      // );
+
+      // if (state.userCurrent._id === userData._id) {
+      //   return;
+      // }
     }
     case UserTypes.GET_USER_BY_ID_FAILURE: {
       return {
@@ -361,7 +377,6 @@ export const UserReducer = (state = initialState, action: UserLoginAction) => {
 
     // ------------- SAVE EMAIL USER
     case UserTypes.SAVE_EMAIL_USER_REGISTER: {
-      console.log('1ds', action.payload);
       return {
         ...state,
         emailUserRegister: action.payload,

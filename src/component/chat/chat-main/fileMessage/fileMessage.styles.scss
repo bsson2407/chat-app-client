@@ -1,0 +1,24 @@
+.message-file {
+  display: flex;
+  align-items: center;
+  margin: 0 16px;
+  margin-top: 4px;
+  margin-bottom: 5px;
+  img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+  }
+
+  span {
+    margin-left: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-right: 10px;
+  }
+  a {
+    i {
+      color: black;
+    }
+  }
+}

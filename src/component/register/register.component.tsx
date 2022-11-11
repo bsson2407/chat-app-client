@@ -1,5 +1,6 @@
-import { FormEvent, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+/* eslint-disable no-useless-escape */
+import { FormEvent, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -15,7 +16,6 @@ import './register.styles.scss';
 import OTPRegister from './otp-register.component';
 
 const Register = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const schema = yup.object().shape({
     email: yup
@@ -30,7 +30,6 @@ const Register = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -43,12 +42,10 @@ const Register = () => {
   const [pass, setPass] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [repeatPass, setRepeatPass] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
   const [countDown, setCountDown] = useState<Boolean>(false);
 
   const user: UserState = useSelector((state: RootState) => state.user);
   const { error } = user;
-  const { userExist }: any = useSelector<RootState>((state) => state.user);
 
   const onSubmit = async (data: UserData) => {
     // if (errors.email?.message) {
@@ -97,9 +94,6 @@ const Register = () => {
                   type="text"
                   placeholder="Email"
                   {...register('email')}
-                  onChange={(e: FormEvent<HTMLInputElement>) =>
-                    setEmail(e.currentTarget.value)
-                  }
                 ></input>
 
                 {errors ? (

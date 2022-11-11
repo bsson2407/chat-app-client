@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from '../../../../redux/reducers';
@@ -8,18 +8,17 @@ import {
   faCaretDown,
   faCaretRight,
   faTrashAlt,
+  faRightFromBracket,
 } from '@fortawesome/free-solid-svg-icons';
 import { IMessage } from '../../../../redux/types/ChatTypes';
-import { dateUtils } from '../../../../utils/dateUtils';
 import {
+  deleteGroupRequest,
   deleteMessageAllMeRequest,
-  getAllConversationByUserRequest,
   getAllMessageByConversationRequest,
-  getConversationByIdRequest,
   leaveGroupRequest,
 } from '../../../../redux/actions/ChatAction';
 import ModalMember from './modal-member/modalmember.component';
-import { showOptionGroupProfile } from '../../../../redux/actions/OptionLayoutAction';
+import { offShow } from '../../../../redux/actions/OptionLayoutAction';
 import ModalChangeGroup from './modal-change-group/modalChangeGroup.component';
 const GroupProfile = () => {
   const dispatch = useDispatch();
@@ -27,7 +26,6 @@ const GroupProfile = () => {
   const { chatWith, listMessage }: any = useSelector<RootState>(
     (state) => state.chat
   );
-  const { socket }: any = useSelector<RootState>((state) => state);
 
   const [showListImage, setShowListImage] = useState(false);
   const [showListFile, setShowListFile] = useState(false);
@@ -36,10 +34,8 @@ const GroupProfile = () => {
   const handleClose = (): void => {
     setShowUpdateGroup(false);
   };
-  console.log(userCurrent);
   // useEffect(() => {
   //   socket.on('kickMemberOutGroupSuccess', (conversationId: string) => {
-  //     console.log('kickMemberOutGroupSuccess');
   //     dispatch(getConversationByIdRequest(conversationId));
   //   });
   // }, [socket]);
@@ -69,28 +65,33 @@ const GroupProfile = () => {
     dispatch(getAllMessageByConversationRequest(chatWith.idConversation));
   };
 
+  const handleDeleteGroup = () => {
+    const data = {
+      idConversation: chatWith.idConversation,
+    };
+    dispatch(offShow());
+    dispatch(deleteGroupRequest(data));
+  };
+
   const handleLeaveGroup = () => {
     const data = {
       conversation: chatWith,
       idConversation: chatWith.idConversation,
       userId: userCurrent._id,
     };
+    // dispatch(showOptionGroupProfile(false));
+    dispatch(offShow());
     dispatch(leaveGroupRequest(data));
-    dispatch(getAllConversationByUserRequest(userCurrent._id));
-
     // dispatch(getConversationByIdRequest(userCurrent._id));
-    dispatch(showOptionGroupProfile(false));
-
-    socket.emit('leaveGroup', data);
   };
 
   const renderListImage = (message: IMessage) => {
     const flag = message.deleteBy?.findIndex(
-      (userIdele) => userIdele == userCurrent._id
+      (userIdele) => userIdele === userCurrent._id
     );
-    console.log(message.type === 'IMAGE' && flag === -1);
     return message.type === 'IMAGE' && flag === -1 ? (
-      <img className="item-image" src={message.url} alt="avatar" />
+      // <img className="item-image" src={message.url} alt="avatar" />
+      <></>
     ) : (
       ''
     );
@@ -98,11 +99,11 @@ const GroupProfile = () => {
 
   const renderListFile = (item: IMessage) => {
     const flag = item.deleteBy?.findIndex(
-      (userIdele) => userIdele == userCurrent._id
+      (userIdele) => userIdele === userCurrent._id
     );
     return item.type === 'FILE' && flag === -1 ? (
       <div>
-        <a href={item.url}>{item.message}</a>
+        <a href={item.urlLink}>{item.message}</a>
       </div>
     ) : (
       ''
@@ -201,14 +202,13 @@ const GroupProfile = () => {
           <span>Xóa cuộc trò chuyện</span>
         </div>
         <div className="actu-item" onClick={() => handleLeaveGroup()}>
-          <FontAwesomeIcon className="icon" icon={faTrashAlt} />
+          <FontAwesomeIcon className="icon" icon={faRightFromBracket} />
 
           <span>Rời cuộc trò chuyện</span>
         </div>
         {chatWith.leaderId === userCurrent._id && (
-          <div className="actu-item">
+          <div className="actu-item" onClick={() => handleDeleteGroup()}>
             <FontAwesomeIcon className="icon" icon={faTrashAlt} />
-
             <span>Giải tán nhóm</span>
           </div>
         )}

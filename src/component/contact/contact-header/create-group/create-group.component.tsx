@@ -9,8 +9,15 @@ import DialogContent from '@material-ui/core/DialogContent';
 import Checkbox from '@material-ui/core/Checkbox';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/reducers';
-import { getAllFriendRequest } from '../../../../redux/actions/UserAction';
+import {
+  getAllFriendRequest,
+  getUserByIdRequest,
+} from '../../../../redux/actions/UserAction';
 import { listFriend } from '../../../../redux/types/UserTypes';
+import {
+  createGroupRequest,
+  getAllConversationByUserRequest,
+} from '../../../../redux/actions/ChatAction';
 
 const CreateGroup = ({ open, handleClose }: any) => {
   const dispatch = useDispatch();
@@ -40,7 +47,11 @@ const CreateGroup = ({ open, handleClose }: any) => {
       nameGroup,
       userIds: checkList,
     };
-    socket.emit('createGroup', data);
+    dispatch(createGroupRequest(data));
+    // dispatch(getAllConversationByUserRequest(userCurrent._id));
+    // dispatch(getUserByIdRequest(userCurrent._id));
+
+    // socket.emit('createGroup', data);
     handleClose();
     // dispatch(searchUserRequest(data));
   };
@@ -50,8 +61,6 @@ const CreateGroup = ({ open, handleClose }: any) => {
     const index = checkList.findIndex((element) => element === value);
     let checkListTemp: any = [...checkList];
     let itemSelectedTemp = [...itemSelected];
-    console.log(value);
-    console.log(index);
 
     // nếu như đã có
     if (index !== -1) {
@@ -72,8 +81,6 @@ const CreateGroup = ({ open, handleClose }: any) => {
         itemSelectedTemp.push(initalFriend[index]);
       }
     }
-    console.log(checkListTemp);
-    console.log(itemSelectedTemp);
 
     setCheckList(checkListTemp);
     setItemSelected(itemSelectedTemp);

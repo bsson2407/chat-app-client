@@ -16,7 +16,6 @@ const OTP = () => {
   const { emailUserResetPass }: { emailUserResetPass: Email } = useSelector(
     (state: RootState) => state.user
   );
-  console.log('email1', emailUserResetPass);
 
   const user: UserState = useSelector((state: RootState) => state.user);
   const { error } = user;

@@ -9,8 +9,14 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../redux/reducers';
 import { FriendItem, listFriend } from '../../../../redux/types/UserTypes';
-import { getAllFriendRequest } from '../../../../redux/actions/UserAction';
-import { addMemberToGroupRequest } from '../../../../redux/actions/ChatAction';
+import {
+  getAllFriendRequest,
+  getUserByIdRequest,
+} from '../../../../redux/actions/UserAction';
+import {
+  addMemberToGroupRequest,
+  getAllMessageByConversationRequest,
+} from '../../../../redux/actions/ChatAction';
 
 const ModalAddMember = ({ open, handleClose }: any) => {
   const dispatch = useDispatch();
@@ -29,11 +35,11 @@ const ModalAddMember = ({ open, handleClose }: any) => {
 
   const [checkList, setCheckList] = useState([]);
   const [itemSelected, setItemSelected] = useState<any>([]);
-  //   useEffect(() => {
+  // useEffect(() => {
   chatWith.members.filter((val: listFriend) => {
     memberInGroup.push(val.idUser._id);
   });
-  //   }, []);
+  // }, []);
 
   useEffect(() => {
     dispatch(getAllFriendRequest(userCurrent._id));
@@ -45,9 +51,11 @@ const ModalAddMember = ({ open, handleClose }: any) => {
       newUserIds: checkList,
     };
     dispatch(addMemberToGroupRequest(data));
-    socket.emit('addMemberToGroup', data);
+    // socket.emit('addMemberToGroup', data);
+    dispatch(getAllMessageByConversationRequest(chatWith.idConversation));
+    dispatch(getUserByIdRequest(userCurrent._id));
+
     handleClose();
-    // dispatch(searchUserRequest(data));
   };
 
   const handleChange = (event: any) => {
@@ -58,9 +66,7 @@ const ModalAddMember = ({ open, handleClose }: any) => {
 
     // itemSelectedTemp.push(value);
     // setItemSelected(itemSelectedTemp);
-    // console.log(itemSelectedTemp);
 
-    // console.log(value);
     // nếu như đã có
     if (index !== -1) {
       itemSelectedTemp = itemSelectedTemp.filter(
@@ -92,7 +98,7 @@ const ModalAddMember = ({ open, handleClose }: any) => {
       aria-describedby="alert-dialog-description"
     >
       <DialogContent>
-        <form className="dialog-view-member" onSubmit={handleSubmit(onSubmit)}>
+        <form className="dialog-add-member" onSubmit={handleSubmit(onSubmit)}>
           <div className="title">
             <span>Thành viên nhóm</span>
             <div className="close" onClick={() => handleClose()}></div>

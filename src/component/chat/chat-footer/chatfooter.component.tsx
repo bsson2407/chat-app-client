@@ -1,9 +1,9 @@
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   sendFileRequest,
   sendImagesRequest,
-  sendVideoRequest,
+  sendMessagesRequest,
 } from '../../../redux/actions/ChatAction';
 import { RootState } from '../../../redux/reducers';
 import './chatfooter.styles.scss';
@@ -15,37 +15,37 @@ const ChatFooter = (props: any) => {
   const [message, setMessage] = useState<string>('');
   const [showPicker, setShowPicker] = useState(false);
 
-  const { socket }: any = useSelector<RootState>((state) => state);
   const { userCurrent }: any = useSelector<RootState>((state) => state.user);
   const { chatWith }: any = useSelector<RootState>((state) => state.chat);
   const [focus, setFocus] = useState<boolean>(false);
-  useEffect(() => {
-    if (
-      focus === true
-      //   &&
-      //   listMessage[listMessage.length - 1].sender !== userCurrent._id
-    ) {
-      socket.emit('seen_message', chatWith.idConversation);
-    }
-  }, [focus, socket, chatWith]);
+
+  // useEffect(() => {
+  //   if (
+  //     focus === true
+  //     //   &&
+  //     //   listMessage[listMessage.length - 1].sender !== userCurrent._id
+  //   ) {
+  //     socket.emit('seen_message', chatWith.idConversation);
+  //   }
+  // }, [focus, socket, chatWith]);
 
   const onEmojiClick = (emojiObj: any) => {
-    console.log(1);
     setMessage((prev) => prev + emojiObj.emoji);
-    console.log(1);
   };
 
-  const handleSubmitForm = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmitForm = async (e: any) => {
     e.preventDefault();
-    const data = {
-      idConversation: chatWith.idConversation,
-      sender: userCurrent._id,
-      message: message,
-      type: 'TEXT',
-    };
-    setMessage('');
-    socket.emit('send_message', data);
-    // socket.emit('seen_message', chatWith.idConversation)
+    // const formData = new FormData();
+
+    if (message !== '') {
+      const data = {
+        idConversation: chatWith.idConversation,
+        idSender: userCurrent._id,
+        message: message,
+      };
+      setMessage('');
+      await dispatch(sendMessagesRequest(data));
+    }
   };
 
   const handleFocus = () => {
@@ -55,68 +55,45 @@ const ChatFooter = (props: any) => {
   const handleFileVideoChange = (e: any) => {
     const files = e.target.files;
     const fileVideo = files[0];
-    const reader = new FileReader();
     if (fileVideo) {
-      reader.readAsDataURL(fileVideo);
       const formData = new FormData();
-      // console.log('is1:', formData);
       formData.append('idSender', userCurrent._id);
       formData.append('idConversation', chatWith.idConversation);
-      formData.append('video', fileVideo);
-      console.log(fileVideo);
-      dispatch(sendVideoRequest(formData));
+      formData.append('file', fileVideo);
+      dispatch(sendFileRequest(formData));
     }
   };
 
   const handleFileChange = (e: any) => {
     const files = e.target.files;
     const file = files[0];
-    const reader = new FileReader();
     if (file) {
-      reader.readAsDataURL(file);
       const formData = new FormData();
-      // console.log('is1:', formData);
+
       formData.append('idSender', userCurrent._id);
       formData.append('idConversation', chatWith.idConversation);
       formData.append('file', file);
-      console.log(file);
       dispatch(sendFileRequest(formData));
     }
   };
 
   const handleFilePhotoChange = (e: any) => {
     const files = e.target.files;
-    const fileImage = files[0];
-    const reader = new FileReader();
-    if (fileImage && fileImage.type.match('image.*')) {
-      reader.readAsDataURL(fileImage);
-      const formData = new FormData();
-      // console.log('is1:', formData);
+    const formData = new FormData();
+    if (files) {
       formData.append('idSender', userCurrent._id);
       formData.append('idConversation', chatWith.idConversation);
-      formData.append('image', fileImage);
-      console.log(fileImage);
+      for (const fileImage of files) {
+        if (fileImage) {
+          formData.append('files', fileImage);
+        }
+      }
       dispatch(sendImagesRequest(formData));
-
-      // const data = {
-      //   idConversation: chatWith.idConversation,
-      //   sender: userCurrent._id,
-      //   message: formData,
-      //   type: 'IMAGE',
-      // };
-      // setMessage('');
-      // socket.emit('send_message', data);
     }
   };
 
   return (
-    <form
-      className="type_message"
-      onSubmit={(e) => {
-        console.log(2);
-        handleSubmitForm(e);
-      }}
-    >
+    <form className="type_message" onSubmit={handleSubmitForm}>
       <div className="top">
         <div className="list">
           <div className="item">
@@ -126,6 +103,7 @@ const ChatFooter = (props: any) => {
             <input
               type="file"
               id="send_video"
+              accept=".mp4, .avi, .mkl, .webm"
               onChange={handleFileVideoChange}
             ></input>
           </div>
@@ -136,7 +114,9 @@ const ChatFooter = (props: any) => {
             <input
               type="file"
               id="send_photo"
+              accept=".png, .PNG, .jpg, .jpeg"
               onChange={handleFilePhotoChange}
+              multiple
             ></input>
           </div>
           <div className="item">
@@ -151,6 +131,7 @@ const ChatFooter = (props: any) => {
           </div>
         </div>
       </div>
+
       <div className="bottom">
         <div className="form">
           <input
@@ -179,7 +160,7 @@ const ChatFooter = (props: any) => {
           </div>
 
           <div className="item">
-            {focus === true ? (
+            {message ? (
               <button>
                 <span className="like">
                   <i className="fas fa-paper-plane"></i>

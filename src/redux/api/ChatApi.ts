@@ -10,8 +10,8 @@ export const sendMessage = (data: any): Promise<IMessage> =>
 
 export const sendImage = (data: any): Promise<IMessage> =>
   axiosClient.post(`/chat/images`, data);
-export const sendVideo = (data: any): Promise<IMessage> =>
-  axiosClient.post(`/chat/video`, data);
+// export const sendVideo = (data: any): Promise<IMessage> =>
+//   axiosClient.post(`/chat/video`, data);
 export const sendFile = (data: any): Promise<IMessage> =>
   axiosClient.post(`/chat/file`, data);
 export const deleteOnlyMe = (data: any): Promise<IMessage> =>

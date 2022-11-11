@@ -3,12 +3,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   getAllConversationByUserRequest,
   getAllMessageByConversationRequest,
+  getConversationByIdRequest,
+  pushNewConversationToListConversation,
   saveInfoChatGroup,
   saveInfoChatWith,
 } from '../../../redux/actions/ChatAction';
 import { showChat } from '../../../redux/actions/OptionLayoutAction';
+import { getUserByIdRequest } from '../../../redux/actions/UserAction';
 import { RootState } from '../../../redux/reducers';
-import { Conversation, Group, User } from '../../../redux/types/ChatTypes';
+import {
+  Conversation,
+  Group,
+  IMessage,
+  User,
+} from '../../../redux/types/ChatTypes';
+import { GroupItem } from '../../../redux/types/UserTypes';
 import './conversation.styles.scss';
 
 const Conversations = () => {
@@ -18,7 +27,6 @@ const Conversations = () => {
     (state) => state.chat
   );
   const { socket }: any = useSelector<RootState>((state) => state);
-  // console.log(chatWith);
   // useEffect(() => {
   //   const arrIdConversation: string[] = [];
   //   listConversation.map((item: Conversation) =>
@@ -27,57 +35,106 @@ const Conversations = () => {
   //   socket.emit('join_all_conversation', arrIdConversation);
   // }, [listConversation]);
   useEffect(() => {
-    console.log(1, userCurrent._id);
     dispatch(getAllConversationByUserRequest(userCurrent._id));
   }, [userCurrent]);
 
-  useEffect(() => {
-    socket.on('createGroupSuccess', (data: string) => {
-      console.log(3, data);
-      dispatch(getAllConversationByUserRequest(data));
-      // dispatch(getAllPeopleRequestRequest(data.userFrom));
-    });
-    socket.on('createGroupToClient', (data: string) => {
-      console.log(2, data);
-      dispatch(getAllConversationByUserRequest(data));
-      // dispatch(getAllPeopleRequestRequest(data.userFrom));
-    });
+  // useEffect(() => {
+  //   socket.on('newMessage', (newMessage: IMessage) => {
+  //     console.log('newMessage');
+  //     dispatch(getAllConversationByUserRequest(userCurrent._id));
+  //   });
+  // });
 
-    socket.on('addMemberToGroupToClient', (data: string) => {
-      console.log(2, data);
-      dispatch(getAllConversationByUserRequest(data));
-      // dispatch(getAllPeopleRequestRequest(data.userFrom));
-    });
+  // useEffect(() => {
+  //   socket.on('createGroupSuccess', (data: string) => {
+  //     dispatch(getAllConversationByUserRequest(data));
+  //     // dispatch(getAllPeopleRequestRequest(data.userFrom));
+  //   });
+  //   // socket.on('createGroupToClient', (data: GroupItem) => {
+  //   //   for (const user of data.members) {
+  //   //     dispatch(getAllConversationByUserRequest(user.idUser._id));
+  //   //   }
+  //   // });
 
-    socket.on('kickMemberOutGroupToClient', (data: string) => {
-      dispatch(getAllConversationByUserRequest(data));
-    });
+  //   // socket.on('addMemberToGroupToClient', (data: GroupItem) => {
+  //   //   // dispatch(getAllConversationByUserRequest());
+  //   //   for (const user of data.members) {
+  //   //     dispatch(getAllConversationByUserRequest(user.idUser._id));
+  //   //   }
+  //   //   // dispatch(getAllPeopleRequestRequest(data.userFrom));
+  //   // });
 
-    socket.on('seen_message', () => {
-      dispatch(getAllConversationByUserRequest(userCurrent._id));
-    });
-  }, []);
-  socket.on('kickMemberOutGroupToClient', (data: string) => {
-    console.log(4, data);
+  //   socket.on('kickMemberOutGroupToClient', (data: GroupItem) => {
+  //     for (const user of data.members) {
+  //       // dispatch(getUserByIdRequest(user.idUser._id));
+  //       dispatch(getAllConversationByUserRequest(user.idUser._id));
+  //     }
+  //   });
 
-    dispatch(getAllConversationByUserRequest(data));
-  });
-  socket.on('addMemberToGroupToClient', (data: string) => {
-    console.log(3, data);
-    dispatch(getAllConversationByUserRequest(data));
-    // dispatch(getAllPeopleRequestRequest(data.userFrom));
-  });
-  socket.on('leaveGroupSuccess', (data: string) => {
-    console.log(3, data);
-    dispatch(getAllConversationByUserRequest(data));
-    // dispatch(getAllPeopleRequestRequest(data.userFrom));
-  });
+  // socket.on('leaveGroupToClient', (data: any) => {
+  //   // dispatch(getAllMessageByConversationRequest(conversation._id));
+  //   // for (const user of conversation.members) {
+  //   //   dispatch(getUserByIdRequest(user.idUser._id));
+  //   //   dispatch(getAllConversationByUserRequest(user.idUser._id));
+  //   // }
+  // });
 
-  useEffect(() => {
-    socket.on('new_message', () => {
-      dispatch(getAllConversationByUserRequest(userCurrent._id));
-    });
-  });
+  // socket.on('leaveGroupSuccess', (id: string) => {
+  //   // dispatch(getAllMessageByConversationRequest(conversation._id));
+
+  //   dispatch(getAllConversationByUserRequest(id));
+  // });
+
+  //   dispatch(getUserByIdRequest(userCurrent._id));
+
+  //   socket.on('seen_message', () => {
+  //     dispatch(getAllConversationByUserRequest(userCurrent._id));
+  //   });
+  // }, []);
+
+  // useEffect(() => {
+  //   socket.on('leaveGroupToClient', (data: any) => {
+  //     const { conversation, userId } = data;
+  //     dispatch(
+  //       getAllMessageByConversationRequest(`${conversation.idConversation}`)
+  //     );
+  //     const list = conversation.members.filter(
+  //       (u: any) => u.idUser._id !== userId
+  //     );
+  //     for (const user of list) {
+
+  //       dispatch(getAllConversationByUserRequest(`${user.idUser._id}`));
+  //     }
+  //   });
+  //   dispatch(getUserByIdRequest(userCurrent._id));
+  //   return () => socket.off('leaveGroupToClient');
+  // }, []);
+  // useEffect(() => {
+  //   socket.on('leaveGroupSuccess', (data: string) => {
+  //     dispatch(getAllConversationByUserRequest(data));
+
+  //     // for (const user of conversation.members) {
+  //     //   dispatch(getUserByIdRequest(user.idUser._id));
+  //     //   dispatch(getAllConversationByUserRequest(user.idUser._id));
+  //     // }
+  //   });
+  //   return () => socket.off('leaveGroupSuccess');
+  // }, []);
+  // socket.on('kickMemberOutGroupToClient', (data: string) => {
+
+  //   dispatch(getAllConversationByUserRequest(data));
+  // });
+
+  // socket.on('leaveGroupSuccess', (data: string) => {
+  //   dispatch(getAllConversationByUserRequest(data));
+  //   // dispatch(getAllPeopleRequestRequest(data.userFrom));
+  // });
+
+  // useEffect(() => {
+  //   socket.on('newMessage', () => {
+  //     dispatch(getAllConversationByUserRequest(userCurrent._id));
+  //   });
+  // });
 
   const handleChat = (item: User, idConversation: string) => {
     const newStateChatWith = {
@@ -86,8 +143,6 @@ const Conversations = () => {
       idConversation: idConversation,
       type: 'single',
     };
-    console.log('click2');
-    // console.log(idConversation);
 
     dispatch(getAllMessageByConversationRequest(idConversation));
     dispatch(saveInfoChatWith(newStateChatWith));
@@ -105,8 +160,6 @@ const Conversations = () => {
       idConversation: idConversation,
       type: 'group',
     };
-    // console.log(idConversation);
-    console.log('click1');
 
     dispatch(getAllMessageByConversationRequest(idConversation));
     dispatch(saveInfoChatWith(newStateChatGroup));

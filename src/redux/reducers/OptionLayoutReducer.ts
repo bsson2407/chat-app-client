@@ -2,25 +2,29 @@ import { OptionLayout, OptionLayoutTypes } from '../types/OptionLayoutTypes';
 import { Actions } from '../types/CommonTypes';
 
 const initialState: OptionLayout = {
-  showChat: true,
+  showChat: false,
   showFriends: false,
   showOtherProfile: false,
   showGroupProfile: false,
+  showConversation: true,
 };
 
 export const OptionLayoutReducer = (state = initialState, action: Actions) => {
   switch (action.type) {
     case OptionLayoutTypes.SHOW_CHAT: {
       return {
-        ...state,
+        showOtherProfile: false,
+        showGroupProfile: false,
         showChat: true,
         showFriends: false,
+        showConversation: true,
       };
     }
 
     case OptionLayoutTypes.SHOW_FRIENDS: {
       return {
-        ...state,
+        showGroupProfile: false,
+        showConversation: false,
         showChat: false,
         showFriends: true,
         showOtherProfile: false,
@@ -47,6 +51,15 @@ export const OptionLayoutReducer = (state = initialState, action: Actions) => {
         // showOtherProfile: action.payload,
       };
     }
+
+    case OptionLayoutTypes.OFF_SHOW:
+      return {
+        showGroupProfile: false,
+        showConversation: true,
+        showChat: false,
+        showFriends: false,
+        showOtherProfile: false,
+      };
     default:
       return state;
   }

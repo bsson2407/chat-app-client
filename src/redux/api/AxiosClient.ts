@@ -2,7 +2,8 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 const axiosClient = axios.create({
-  baseURL: 'http://localhost:5000',
+  // baseURL: 'http://localhost:5000',
+  baseURL: 'https://chap-app-cnmoi.herokuapp.com',
   headers: {
     'Content-Type': 'application/json',
     Authorization: `${localStorage.getItem('token')}`,
@@ -15,7 +16,6 @@ axiosClient.interceptors.request.use(
     return config;
   },
   function (err) {
-    console.log(err);
     return Promise.reject(err);
   }
 );

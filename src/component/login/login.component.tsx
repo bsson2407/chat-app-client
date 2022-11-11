@@ -15,7 +15,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // const { register, handleSubmit } = useForm<FormData>();
-  console.log(1);
   const schema = yup.object().shape({
     email: yup
       .string()
@@ -36,7 +35,6 @@ const Login = () => {
 
   const user: UserState = useSelector((state: RootState) => state.user);
   const { error } = user;
-  // console.log(error.data);
 
   const handleClearUserState = (): void => {
     dispatch(clearUserState());

@@ -1,5 +1,5 @@
 // import { Email } from '../types/UserTypes';
-import { Friend, refeshToken, UserData } from '../types/UserTypes';
+import { Friend, refeshToken } from '../types/UserTypes';
 import axiosClient from './AxiosClient';
 
 interface ListResponse<T> {

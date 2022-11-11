@@ -48,18 +48,15 @@ const UpdateProfile = ({ open, handleClose }: Update) => {
   });
 
   // const { MenuItem } = Select;
-  // console.log(
   //   dateUtils.transferDateUpdate(
   //     changeDateOfBirth.date,
   //     changeDateOfBirth.month,
   //     changeDateOfBirth.year
   //   )
   // );
-  console.log(gender);
   const onSubmit = async () => {
     if (image) {
       const formData = new FormData();
-      console.log('is1:', formData);
       formData.append('_id', userCurrent._id);
       formData.append('image', image);
       await dispatch(updateAvatarRequest(formData));
@@ -75,7 +72,6 @@ const UpdateProfile = ({ open, handleClose }: Update) => {
         changeDateOfBirth.year
       ),
     };
-    console.log(data);
 
     if (data) {
       await dispatch(updateProfileRequest(data));
@@ -87,14 +83,11 @@ const UpdateProfile = ({ open, handleClose }: Update) => {
   const handerChangeGender = (genderItem: any) => {
     // const upGender: boolean = false;
     genderItem.target.value === 'Nam' ? setGender(false) : setGender(true);
-    console.log(gender);
     // setChangeName(gender.target.value);
   };
   const handleFileInputChange = (e: any) => {
     setPreviewSource('');
     const files = e.target.files;
-
-    console.log('file', files);
 
     const fileImage = files[0];
     const reader = new FileReader();
@@ -188,7 +181,6 @@ const UpdateProfile = ({ open, handleClose }: Update) => {
 
   const handleMonthChange = (monthValue: any) => {
     const valueTempt = { ...changeDateOfBirth, month: monthValue.target.value };
-    console.log(monthValue.target.value);
     setChangeDateOfBirth(valueTempt);
     // handleValueChange(valueTempt);
   };
@@ -251,7 +243,7 @@ const UpdateProfile = ({ open, handleClose }: Update) => {
               <input
                 type="text"
                 defaultValue={userCurrent.name}
-                {...register('email')}
+                // {...register('email')}
                 // value={name ? name : userCurrent.name}
                 onChange={(e: FormEvent<HTMLInputElement>) =>
                   setName(e.currentTarget.value)

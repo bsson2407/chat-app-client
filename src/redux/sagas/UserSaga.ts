@@ -30,7 +30,6 @@ import {
   updateProfileSuccess,
 } from '../actions/UserAction';
 import {
-  addFriend,
   checkOtp,
   getAllFriend,
   getAllPeopleRequest,
@@ -49,7 +48,6 @@ import {
   EmailPass,
   listFriend,
   Message,
-  SignUpStart,
   Tokens,
   UserData,
   UserTypes,
@@ -66,7 +64,6 @@ function* RegisterSaga(action: Actions) {
   } catch (error) {
     const err = error as AxiosError;
 
-    // console.log(err.response);
     // const data = err.response?.data;
     const errStr = `${err.response?.data}`;
     // alert(error);
@@ -74,14 +71,10 @@ function* RegisterSaga(action: Actions) {
     // yield put(registerUserFailure(error as Error));
   }
 }
-interface errStr {
-  errStr?: string;
-  // email: string;
-}
+
 function* LoginSaga(action: Actions) {
   try {
     const user: UserData = yield call(login, action.payload);
-    console.log(user);
     localStorage.setItem('token', JSON.stringify(user.token));
     localStorage.setItem('refeshToken', JSON.stringify(user.refeshToken));
 
@@ -90,7 +83,6 @@ function* LoginSaga(action: Actions) {
   } catch (error) {
     const err = error as AxiosError;
 
-    // console.log(err.response);
     // const data = err.response?.data;
     const errStr = `${err.response?.data}`;
     // alert(error);
@@ -105,7 +97,6 @@ function* SearchUserSaga(action: Actions) {
   } catch (error) {
     const err = error as AxiosError;
 
-    // console.log(err.response);
     // const data = err.response?.data;
     const errStr = `${err.response?.data}`;
     // alert(error);
@@ -115,7 +106,6 @@ function* SearchUserSaga(action: Actions) {
 
 function* SearchUserExistSaga(action: Actions) {
   try {
-    console.log(action.payload);
     const result: boolean = yield call(searchUserExist, action.payload);
     yield put(searchUserExistSuccess(result));
   } catch (error) {
@@ -126,28 +116,13 @@ function* SearchUserExistSaga(action: Actions) {
 function* GetEmailSaga(action: Actions) {
   try {
     const result: Message = yield call(getEmail, action.payload);
-    console.log('m:', result);
     yield put(getEmailSuccess(result));
   } catch (error) {
-    console.log(error);
     yield put(getEmailFailure(error as Error));
   }
 }
 
-function* AddFriendSaga(action: Actions) {
-  console.log(action);
-  try {
-    const result: Message = yield call(addFriend, action.payload);
-    yield put(checkOtpSuccess(result));
-    // document.location.href = '/newpass';
-    action.callback();
-  } catch (error) {
-    yield put(checkOtpFailure(error as Error));
-  }
-}
-
 function* CheckOtpSaga(action: Actions) {
-  console.log(action);
   try {
     const result: Message = yield call(checkOtp, action.payload);
     yield put(checkOtpSuccess(result));
@@ -210,7 +185,6 @@ function* GetFriendByIdSaga(action: Actions) {
 function* UpdateAvatarSaga(action: Actions) {
   try {
     const result: UserData = yield call(updateAvatar, action.payload);
-    console.log(action.payload);
     yield put(updateAvatarSuccess(result));
   } catch (error) {
     yield put(updateAvatarFailure(error as Error));

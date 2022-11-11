@@ -1,4 +1,3 @@
-import { DateLocale } from 'yup/lib/locale';
 import { User } from './ChatTypes';
 
 export const UserTypes = {
@@ -9,10 +8,6 @@ export const UserTypes = {
   REGISTER_USER_REQUEST: 'REGISTER_USER_REQUEST',
   REGISTER_USER_SUCCESS: 'REGISTER_USER_SUCCESS',
   REGISTER_USER_FAILURE: 'REGISTER_USER_FAILURE',
-
-  REGISTER_USER_FIREBASE_REQUEST: 'REGISTER_USER_FIREBASE_REQUEST',
-  REGISTER_USER_FIREBASE_SUCCESS: 'REGISTER_USER_FIREBASE_SUCCESS',
-  REGISTER_USER_FIREBASE_FAILURE: 'REGISTER_USER_FIREBASE_FAILURE',
 
   LOGOUT_USER_REQUEST: 'LOGOUT_USER_REQUEST',
   LOGOUT_USER_SUCCESS: 'LOGOUT_USER_SUCCESS',
@@ -166,6 +161,7 @@ export type GroupItem = {
   members: User[];
   idConversation?: string;
   type: string;
+  deleteUserId?: string;
 };
 
 // export type listFriend = [Friend];

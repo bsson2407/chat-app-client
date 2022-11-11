@@ -5,7 +5,7 @@ import {
   getUserByIdRequest,
 } from '../../redux/actions/UserAction';
 import { RootState } from '../../redux/reducers';
-import { Friend, FriendItem } from '../../redux/types/UserTypes';
+import { FriendItem } from '../../redux/types/UserTypes';
 import './request-friend.styles.scss';
 
 type Data = {
@@ -19,7 +19,6 @@ const RequestFriend = () => {
   const { userCurrent, peopleRequest }: any = useSelector<RootState>(
     (state) => state.user
   );
-  console.log(peopleRequest);
   const { socket }: any = useSelector<RootState>((state) => state);
 
   useEffect(() => {
@@ -28,7 +27,6 @@ const RequestFriend = () => {
 
   useEffect(() => {
     // socket.on('add_friend_success', (idUser: string) => {
-    //   console.log('add_friend_success');
     //   dispatch(getUserByIdRequest(idUser));
     // });
     socket.on('requestAddFriendToClient', (data: Data) => {
@@ -41,16 +39,13 @@ const RequestFriend = () => {
       dispatch(getUserByIdRequest(data.userTo));
     });
     socket.on('cancelRequestAddFriendSuccess', (data: Data) => {
-      console.log('cancelRequestAddFriendSuccess');
       dispatch(getUserByIdRequest(data.userTo));
     });
 
     // socket.on('acceptAddFriendSuccess', (data: Data) => {
-    //   // console.log('acceptAddFriendSuccess');
     //   getAllPeopleRequestRequest(userCurrent._id);
     // });
     // socket.on('new_request_friend', (idUser: string) => {
-    //   console.log('new_request_friend');
 
     //   dispatch(getUserByIdRequest(idUser));
     // });
@@ -60,7 +55,6 @@ const RequestFriend = () => {
     const data = { userFrom: userCurrent._id, userTo: item.idUser._id };
     socket.emit('acceptAddFriend', data);
     dispatch(getUserByIdRequest(userCurrent._id));
-    // console.log(peopleRequest);
 
     // dispatch(getUserByIdRequest(item.idUser._id));
   };

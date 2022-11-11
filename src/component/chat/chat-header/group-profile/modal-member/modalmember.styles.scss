@@ -1,8 +1,8 @@
 .dialog-view-member {
   display: flex;
   flex-direction: column;
-  min-height: 668px;
-  min-width: 500px;
+  min-height: 558px;
+  min-width: 350px;
 
   .title {
     display: flex;
@@ -43,47 +43,6 @@
       }
       &:after {
         transform: rotate(-45deg);
-      }
-    }
-  }
-
-  .create {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-
-    .camera {
-      height: 48px;
-      width: 48px;
-      text-align: center;
-      line-height: 45px;
-      border-radius: 50%;
-      border: 1px solid #eee;
-
-      span {
-        font-size: 28px;
-        color: #72808e;
-      }
-    }
-
-    .phone {
-      flex-grow: 1;
-
-      input {
-        height: 38px;
-        line-height: 38px;
-        padding: 0 5px;
-        font-size: 15px;
-        width: 100%;
-        outline: none;
-        border: none;
-        border-bottom: 1px solid #eee;
-
-        &:focus {
-          background: white;
-          border-bottom: 1px solid #0068ff;
-        }
       }
     }
   }
@@ -140,154 +99,75 @@
         &_item {
           display: flex;
           align-items: center;
+          justify-content: space-between;
           gap: 10px;
 
-          .checkbox {
-          }
-          .avatar {
-            img {
-              width: 40px;
-              height: 40px;
-              border-radius: 50%;
-            }
-          }
-          .name {
-            font-weight: 400;
-            text-align: left;
-            font-size: 14px;
-            padding-right: 1rem;
-
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-            word-wrap: break-word;
-          }
-        }
-      }
-    }
-
-    .added {
-      width: 180px;
-      border: 1px solid #eee;
-      padding: 0.5rem;
-
-      .count {
-        font-weight: 600;
-        text-align: left;
-        font-size: 15px;
-        margin-bottom: 0.5rem;
-
-        span {
-          height: 20px;
-          padding: 0 8px;
-          background: #e5efff;
-          color: #0068ff;
-          border-radius: 4px;
-          margin-left: 4px;
-          font-weight: 600;
-          font-size: 12px;
-        }
-      }
-
-      &_list {
-        display: flex;
-        flex-direction: column;
-        overflow-y: scroll;
-        height: 340px;
-        gap: 8px;
-
-        &::-webkit-scrollbar {
-          width: 8px;
-          cursor: pointer;
-        }
-        &::-webkit-scrollbar-track {
-          background: #fff;
-        }
-        &::-webkit-scrollbar-thumb {
-          background: #b9c0c7;
-          border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-          background: #b9c0c7;
-        }
-
-        &_item {
-          display: flex;
-          align-items: center;
-          background: #e5efff;
-          padding: 4px;
-          border-radius: 50px;
-          gap: 8px;
-
-          .avatar {
+          .info {
             display: flex;
             align-items: center;
-            box-shadow: 0 0 0 1px #fff;
-            border-radius: 50%;
+            gap: 10px;
+            .avatar {
+              img {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+              }
+            }
+            .name {
+              font-weight: 400;
+              text-align: left;
+              font-size: 14px;
+              padding-right: 1rem;
 
-            img {
-              width: 24px;
-              height: 24px;
-              border-radius: 50%;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              overflow: hidden;
+              word-wrap: break-word;
             }
           }
-          .name {
-            font-size: 14px;
-            flex-grow: 1;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-          }
-          .close {
-            color: #0068ff;
-            padding-right: 0.5rem;
+          .option {
+            justify-content: space-between;
 
-            cursor: pointer;
+            .menu {
+              position: absolute;
+              right: 8px;
+              width: 150px;
+              background: #fff;
+              border-radius: 4px;
+              z-index: 9999;
+              box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.18);
+              border: 1px solid #eee;
+
+              &-item {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 0.5rem;
+
+                &:hover {
+                  background: #eee;
+                  transition: 0.3s;
+                }
+
+                span {
+                  cursor: pointer;
+                  text-align: left;
+                  font-size: 13px;
+                  color: #001a33;
+                  white-space: nowrap;
+
+                  i {
+                    margin-right: 8px;
+                    font-size: 17px;
+                    width: 18px;
+                    height: 18px;
+                  }
+                }
+              }
+            }
           }
         }
-      }
-    }
-  }
-
-  .search {
-    padding: 0.5rem 0;
-
-    span {
-      font-size: 13px;
-      padding: 0 1rem;
-      font-weight: 600;
-    }
-
-    form {
-      position: relative;
-      padding: 0.3rem 1rem 0rem 1rem;
-
-      input {
-        height: 38px;
-        line-height: 38px;
-        padding: 0 40px;
-        font-size: 15px;
-        width: 100%;
-        outline: none;
-        border: 1px solid #eee;
-        border-radius: 20px;
-
-        &:focus {
-          background: white;
-          border-radius: 16px;
-          border: 1px solid #0068ff;
-          border-radius: 20px;
-        }
-      }
-
-      span {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        left: 1rem;
-        font-size: 16px;
-        color: #72808e;
-        cursor: pointer;
       }
     }
   }
@@ -311,15 +191,6 @@
       border: none;
       cursor: pointer;
       padding: 0 16px;
-    }
-    .error {
-      color: red;
-      position: absolute;
-      font-size: 12px;
-      // bottom: -22px;
-      left: 0;
-      animation: hideError 2s linear;
-      // opacity: 0;
     }
 
     .cancel {

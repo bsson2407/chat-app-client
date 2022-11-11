@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import React, { useState } from 'react';
 import './profile.styles.scss';
 
 import Dialog from '@material-ui/core/Dialog';
@@ -16,7 +16,6 @@ interface Update {
 
 const Profile = ({ open, handleClose }: Update) => {
   const { userCurrent }: any = useSelector<RootState>((state) => state.user);
-  const [previewSource, setPreviewSource] = useState<any>('');
   const [openUpdate, setOpenUpdate] = useState<boolean>(false);
   //   const [showUpdateProfile, setShowUpdateProfile] = useState<boolean>(false);
 
@@ -29,7 +28,6 @@ const Profile = ({ open, handleClose }: Update) => {
 
   const handleOpenUpdate = (): void => {
     setOpenUpdate(true);
-    console.log(openUpdate);
     if (openUpdate === true) {
       handleClose();
     }
@@ -54,13 +52,9 @@ const Profile = ({ open, handleClose }: Update) => {
             </div>
             <div className="avatar">
               <div className="img">
-                {previewSource.length > 0 ? (
-                  <img src={previewSource} alt="Red dot" />
-                ) : (
-                  <div>
-                    <img src={userCurrent.avatar} alt="avatar"></img>
-                  </div>
-                )}
+                <div>
+                  <img src={userCurrent.avatar} alt="avatar"></img>
+                </div>
               </div>
               <div className="name">
                 <span>{userCurrent.name}</span>

@@ -31,3 +31,9 @@ export const showOptionGroupProfile = (value: boolean) => {
     payload: value,
   };
 };
+
+export const offShow = () => {
+  return {
+    type: OptionLayoutTypes.OFF_SHOW,
+  };
+};

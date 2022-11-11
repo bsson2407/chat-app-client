@@ -22,7 +22,6 @@ function App() {
   const { user, call, socket }: any = useSelector<RootState>((state) => state);
   useEffect(() => {
     socket.on('callUserToClient', (data: any) => {
-      console.log(data);
       dispatch({ type: ActionTypes.CALL, payload: data });
     });
 

@@ -60,9 +60,9 @@ const OtherProfile = () => {
     const flag = message.deleteBy?.findIndex(
       (userIdele) => userIdele == userCurrent._id
     );
-    console.log(message.type === 'IMAGE' && flag === -1);
     return message.type === 'IMAGE' && flag === -1 ? (
-      <img className="item-image" src={message.url} alt="avatar" />
+      // <img className="item-image" src={message.url} alt="avatar" />
+      <></>
     ) : (
       ''
     );
@@ -74,7 +74,7 @@ const OtherProfile = () => {
     );
     return item.type === 'FILE' && flag === -1 ? (
       <div>
-        <a href={item.url}>{item.message}</a>
+        <a href={item.urlLink}>{item.message}</a>
       </div>
     ) : (
       ''

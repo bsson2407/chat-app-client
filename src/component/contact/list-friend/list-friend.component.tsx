@@ -63,7 +63,6 @@ const ListFriend = () => {
       const bUser = b.members.filter(
         (item: User) => item.idUser._id !== userCurrent._id
       )[0];
-      console.log(aUser.idUser.name > bUser.idUser.name);
       return aUser.idUser.name > bUser.idUser.name;
 
       // a.members.filter((item: User) => item.idUser._id !== userCurrent._id)[0]
@@ -96,7 +95,6 @@ const ListFriend = () => {
     const chatWithUser = conversation.members.filter(
       (item: User) => item.idUser._id !== userCurrent._id
     )[0];
-    // console.log(chatWithUser);
 
     return (
       <div

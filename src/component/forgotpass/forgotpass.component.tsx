@@ -36,7 +36,6 @@ const ForgotPass = () => {
 
   const [countDown, setCountDown] = useState<Boolean>(false);
   const onSubmit = async (data: Email) => {
-    console.log('s23:', data);
     await dispatch(clearUserState());
     await dispatch(getEmailRequest(data));
     dispatch(saveEmailUser(data));

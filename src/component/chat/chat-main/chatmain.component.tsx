@@ -6,10 +6,8 @@ import { RootState } from '../../../redux/reducers';
 import {
   deleteMessageOnlyMeRequest,
   getAllMessageByConversationRequest,
-  getConversationByIdRequest,
   pushNewMesssgeToListMessage,
   recallAMesssgeToListMessage,
-  saveInfoChatWith,
 } from '../../../redux/actions/ChatAction';
 import { IMessage, User } from '../../../redux/types/ChatTypes';
 import Tippy from '@tippyjs/react';
@@ -20,19 +18,15 @@ import {
   faTrashArrowUp,
 } from '@fortawesome/free-solid-svg-icons';
 import Card from './card.component';
-import {
-  getFriendByIdRequest,
-  getUserByIdRequest,
-} from '../../../redux/actions/UserAction';
-import { getConversationById } from '../../../redux/api/UserApi';
-// import moment from 'moment';
+import { getFriendByIdRequest } from '../../../redux/actions/UserAction';
+import MessageItem from './messageItem/messageItem.component';
+
 const ChatMain = () => {
   const dispatch = useDispatch();
-  const { chatWith, listMessage, isLoading }: any = useSelector<RootState>(
+  const { chatWith, listMessage }: any = useSelector<RootState>(
     (state) => state.chat
   );
 
-  // console.log(chatWith.idConversation);
   const { socket }: any = useSelector<RootState>((state) => state);
   const { userCurrent }: any = useSelector<RootState>((state) => state.user);
 
@@ -51,15 +45,16 @@ const ChatMain = () => {
   };
   useEffect(() => {
     // socket.on('seen_message', () => {
-    console.log(chatWith.idConversation);
 
     dispatch(getAllMessageByConversationRequest(chatWith.idConversation));
     // });
-  }, [chatWith.idConversation]);
-
+  }, [chatWith]);
   useEffect(() => {
     var element: any = document.querySelector(`.listMessage`);
     element.scrollTop = element.scrollHeight;
+  });
+
+  useEffect(() => {
     if (chatWith.type === 'single')
       dispatch(getFriendByIdRequest(chatWith.idUser._id));
 
@@ -67,36 +62,14 @@ const ChatMain = () => {
       dispatch(recallAMesssgeToListMessage(recallMessage));
       dispatch(getAllMessageByConversationRequest(chatWith.idConversation));
     });
-    socket.on('addMemberToGroupSuccess', (conversationId: string) => {
-      console.log(conversationId);
-      dispatch(getAllMessageByConversationRequest(conversationId));
-      dispatch(getUserByIdRequest(userCurrent._id));
-    });
-    socket.on('kickMemberOutGroupSuccess', (conversationId: string) => {
-      dispatch(getAllMessageByConversationRequest(conversationId));
-      dispatch(getUserByIdRequest(userCurrent._id));
-    });
   }, []);
-  socket.on('leaveGroupToClient', (conversationId: string) => {
-    console.log(conversationId);
-    console.log('leaveGroupToClient');
-    dispatch(getAllMessageByConversationRequest(conversationId));
-    dispatch(getUserByIdRequest(userCurrent._id));
-  });
-  // console.log(chatWith);
+
   useEffect(() => {
     socket.emit('join_conversation', chatWith.idConversation);
-    socket.on('new_message', (newMessage: IMessage) => {
+    socket.on('newMessage', (newMessage: IMessage) => {
       dispatch(pushNewMesssgeToListMessage(newMessage));
     });
   }, [chatWith]);
-
-  // useEffect(())
-
-  // useEffect(() => {
-  //   var element: any = document.querySelector(`.listMessage`);
-  //   element.scrollTop = element.scrollHeight;
-  // }, []);
 
   const renderMessageMe = (item: IMessage, index: number, arr: IMessage[]) => {
     const flag = item.deleteBy?.findIndex(
@@ -166,21 +139,7 @@ const ChatMain = () => {
             >
               {index === listMessage.length - 1 ? (
                 <div className="main">
-                  {item.type === 'IMAGE' ? (
-                    <img className="image" alt="img" src={item.url} />
-                  ) : item.type === 'TEXT' ? (
-                    <div className="text">{item.message}</div>
-                  ) : item.type === 'VIDEO' ? (
-                    <video width="500" height="300" controls>
-                      <source src={item.url} type="video/mp4" />
-                    </video>
-                  ) : item.type === 'FILE' ? (
-                    <a href={item.url}>{item.message}</a>
-                  ) : item.type === 'RECALL' ? (
-                    <div className="recall-message">{item.message}</div>
-                  ) : (
-                    ''
-                  )}
+                  <MessageItem item={item} />
 
                   <div className="more">
                     <span className="time">{`${date.getHours()}:${date.getMinutes()}`}</span>
@@ -193,23 +152,7 @@ const ChatMain = () => {
                 </div>
               ) : (
                 <div className="main">
-                  {item.type === 'IMAGE' ? (
-                    <img className="image" alt="img" src={item.url} />
-                  ) : item.type === 'TEXT' ? (
-                    <div className="text">{item.message}</div>
-                  ) : item.type === 'VIDEO' ? (
-                    <video width="500" height="300" controls>
-                      <source src={item.url} type="video/mp4" />
-                    </video>
-                  ) : item.type === 'FILE' ? (
-                    <div>
-                      <a href={item.url}>{item.message}</a>
-                    </div>
-                  ) : item.type === 'RECALL' ? (
-                    <div className="recall-message">{item.message}</div>
-                  ) : (
-                    ''
-                  )}
+                  <MessageItem item={item} />
                 </div>
               )}
             </TippyHeadless>
@@ -245,39 +188,11 @@ const ChatMain = () => {
         )}
         {index === listMessage.length - 1 ? (
           <div className="main">
-            {item.type === 'IMAGE' ? (
-              <img className="image" alt="img" src={item.url} />
-            ) : item.type === 'TEXT' ? (
-              <div className="text">{item.message}</div>
-            ) : item.type === 'VIDEO' ? (
-              <video width="500" height="300" controls>
-                <source src={item.url} type="video/mp4" />
-              </video>
-            ) : item.type === 'FILE' ? (
-              <a href={item.url}>{item.message}</a>
-            ) : item.type === 'RECALL' ? (
-              <div className="recall-message">{item.message}</div>
-            ) : (
-              ''
-            )}
+            <MessageItem item={item} />
           </div>
         ) : (
           <div className="main">
-            {item.type === 'IMAGE' ? (
-              <img className="image" alt="img" src={item.url} />
-            ) : item.type === 'TEXT' ? (
-              <div className="text">{item.message}</div>
-            ) : item.type === 'VIDEO' ? (
-              <video width="500" height="300" controls>
-                <source src={item.url} type="video/mp4" />
-              </video>
-            ) : item.type === 'FILE' ? (
-              <a href={item.url}>{item.message}</a>
-            ) : item.type === 'RECALL' ? (
-              <div className="recall-message">{item.message}</div>
-            ) : (
-              ''
-            )}
+            <MessageItem item={item} />
           </div>
         )}
       </>
@@ -336,39 +251,11 @@ const ChatMain = () => {
             >
               {index === listMessage.length - 1 ? (
                 <div className="main">
-                  {item.type === 'IMAGE' ? (
-                    <img className="image" alt="img" src={item.url} />
-                  ) : item.type === 'TEXT' ? (
-                    <div className="text">{item.message}</div>
-                  ) : item.type === 'VIDEO' ? (
-                    <video width="500" height="300" controls>
-                      <source src={item.url} type="video/mp4" />
-                    </video>
-                  ) : item.type === 'FILE' ? (
-                    <a href={item.url}>{item.message}</a>
-                  ) : item.type === 'RECALL' ? (
-                    <div className="recall-message">{item.message}</div>
-                  ) : (
-                    ''
-                  )}
+                  <MessageItem item={item} />
                 </div>
               ) : (
                 <div className="main">
-                  {item.type === 'IMAGE' ? (
-                    <img className="image" alt="img" src={item.url} />
-                  ) : item.type === 'TEXT' ? (
-                    <div className="text">{item.message}</div>
-                  ) : item.type === 'VIDEO' ? (
-                    <video width="500" height="300" controls>
-                      <source src={item.url} type="video/mp4" />
-                    </video>
-                  ) : item.type === 'FILE' ? (
-                    <a href={item.url}>{item.message}</a>
-                  ) : item.type === 'RECALL' ? (
-                    <div className="recall-message">{item.message}</div>
-                  ) : (
-                    ''
-                  )}
+                  <MessageItem item={item} />
                 </div>
               )}
             </TippyHeadless>

@@ -1,6 +1,5 @@
 import React from 'react';
 import ForgotPass from '../../component/forgotpass/forgotpass.component';
-import Login from '../../component/login/login.component';
 
 const ForgotPasspage = () => {
   return (
