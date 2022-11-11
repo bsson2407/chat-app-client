@@ -179,6 +179,8 @@ export const chatReducer = (state = initialState, action: Actions) => {
       };
     }
     case ChatTypes.SEND_MESSAGES_FAILURE: {
+      alert('file gửi không lớn hơn 10MB');
+
       return {
         ...state,
         error: action.payload,

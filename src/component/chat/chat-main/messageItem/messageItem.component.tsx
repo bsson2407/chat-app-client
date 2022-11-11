@@ -24,11 +24,7 @@ const MessageItem = ({ item }: MessageItem) => {
           <source src={item.urlLink} type="video/mp4" />
         </video>
       ) : item.type === 'FILE' ? (
-        <FileMessage
-          fileUrl={item.urlLink}
-          message={item.message}
-          flag={true}
-        />
+        <FileMessage fileUrl={item.urlLink} message={item.message} />
       ) : item.type === 'RECALL' ? (
         <div className="recall-message">{item.message}</div>
       ) : (

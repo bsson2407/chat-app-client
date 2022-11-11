@@ -3,10 +3,9 @@ import { Backdrop, Modal } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import './fileMessage.styles.scss';
 
-const FileMessage = ({ fileUrl, message, fileLink }: any) => {
+const FileMessage = ({ fileUrl, message }: any) => {
   const [pathFile, setPathFile] = useState('');
   const [viewFile, setViewFile] = useState(false);
-  const [docText, setDocText] = useState<any>(null);
   useEffect(() => {
     setPathFile(fileUrl.split('.')[fileUrl.split('.').length - 1]);
   }, []);
@@ -16,21 +15,8 @@ const FileMessage = ({ fileUrl, message, fileLink }: any) => {
   };
 
   const showViewFile = (file: any) => {
-    console.log(fetch(file));
-    fetch(file)
-      .then((response) => {
-        console.log(response);
-        return response.text();
-      })
-      .then((data) => {
-        console.log(data);
-        setDocText(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    // let read = fetch(file);
-    console.log(docText);
+    console.log(setPathFile(file.split(':')[file.split(':').length + 1]));
+
     return (
       <Modal
         open={viewFile}

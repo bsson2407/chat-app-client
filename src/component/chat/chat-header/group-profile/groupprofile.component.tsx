@@ -20,6 +20,7 @@ import {
 import ModalMember from './modal-member/modalmember.component';
 import { offShow } from '../../../../redux/actions/OptionLayoutAction';
 import ModalChangeGroup from './modal-change-group/modalChangeGroup.component';
+import FileMessage from '../../chat-main/fileMessage/fileMessage.component';
 const GroupProfile = () => {
   const dispatch = useDispatch();
   const { userCurrent }: any = useSelector<RootState>((state) => state.user);
@@ -102,10 +103,11 @@ const GroupProfile = () => {
       (userIdele) => userIdele === userCurrent._id
     );
     return item.type === 'FILE' && flag === -1 ? (
-      <div>
-        <a href={item.urlLink}>{item.message}</a>
-      </div>
+      <FileMessage fileUrl={item.urlLink} message={item.message} />
     ) : (
+      // <div>
+      //   <a href={item.urlLink}>{item.message}</a>
+      // </div>
       ''
     );
   };
