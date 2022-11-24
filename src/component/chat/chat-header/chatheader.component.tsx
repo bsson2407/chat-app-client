@@ -53,6 +53,7 @@ const ChatHeader = (props: any) => {
     };
 
     if (peer.open) {
+      console.log(peer._id);
       msg.peerId = peer._id;
     }
 

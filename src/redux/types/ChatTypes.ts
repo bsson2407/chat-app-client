@@ -72,10 +72,10 @@ export const ChatTypes = {
 
 export interface IMessage {
   _id: string;
-  idCoversation: string;
+  idConversation: string;
   sender: string;
   message: string;
-  seen: boolean;
+  seen: [string];
   type?: string;
   urlImage: [string];
   urlLink: string;

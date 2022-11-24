@@ -25,36 +25,9 @@ const RequestFriend = () => {
     dispatch(getAllPeopleRequestRequest(userCurrent._id));
   }, [userCurrent, dispatch]);
 
-  useEffect(() => {
-    // socket.on('add_friend_success', (idUser: string) => {
-    //   dispatch(getUserByIdRequest(idUser));
-    // });
-    socket.on('requestAddFriendToClient', (data: Data) => {
-      dispatch(getUserByIdRequest(data.userTo));
-    });
-    socket.on('deniedAddFriendToClient', (data: Data) => {
-      dispatch(getUserByIdRequest(data.userTo));
-    });
-    socket.on('deniedAddFriendToClient', (data: Data) => {
-      dispatch(getUserByIdRequest(data.userTo));
-    });
-    socket.on('cancelRequestAddFriendSuccess', (data: Data) => {
-      dispatch(getUserByIdRequest(data.userTo));
-    });
-
-    // socket.on('acceptAddFriendSuccess', (data: Data) => {
-    //   getAllPeopleRequestRequest(userCurrent._id);
-    // });
-    // socket.on('new_request_friend', (idUser: string) => {
-
-    //   dispatch(getUserByIdRequest(idUser));
-    // });
-  }, [userCurrent, socket, dispatch]);
-
   const handleAcceptFriend = (item: FriendItem) => {
     const data = { userFrom: userCurrent._id, userTo: item.idUser._id };
     socket.emit('acceptAddFriend', data);
-    dispatch(getUserByIdRequest(userCurrent._id));
 
     // dispatch(getUserByIdRequest(item.idUser._id));
   };
@@ -62,8 +35,6 @@ const RequestFriend = () => {
   const handleDontAcceptFriend = (item: FriendItem) => {
     const data = { userFrom: userCurrent._id, userTo: item.idUser._id };
     socket.emit('deniedAddFriend', data);
-    dispatch(getUserByIdRequest(userCurrent._id));
-    getAllPeopleRequestRequest(userCurrent._id);
 
     // dispatch(getUserByIdRequest(item.idUser._id));
   };

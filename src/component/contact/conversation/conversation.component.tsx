@@ -3,151 +3,45 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   getAllConversationByUserRequest,
   getAllMessageByConversationRequest,
-  getConversationByIdRequest,
-  pushNewConversationToListConversation,
-  saveInfoChatGroup,
   saveInfoChatWith,
 } from '../../../redux/actions/ChatAction';
 import { showChat } from '../../../redux/actions/OptionLayoutAction';
-import { getUserByIdRequest } from '../../../redux/actions/UserAction';
 import { RootState } from '../../../redux/reducers';
-import {
-  Conversation,
-  Group,
-  IMessage,
-  User,
-} from '../../../redux/types/ChatTypes';
-import { GroupItem } from '../../../redux/types/UserTypes';
+import { Conversation, Group, User } from '../../../redux/types/ChatTypes';
 import './conversation.styles.scss';
 
 const Conversations = () => {
   const dispatch = useDispatch();
+  const { chatWith }: any = useSelector<RootState>((state) => state.chat);
+
   const { userCurrent }: any = useSelector<RootState>((state) => state.user);
-  const { listConversation, listMessage }: any = useSelector<RootState>(
+  const { listConversation }: any = useSelector<RootState>(
     (state) => state.chat
   );
   const { socket }: any = useSelector<RootState>((state) => state);
-  // useEffect(() => {
-  //   const arrIdConversation: string[] = [];
-  //   listConversation.map((item: Conversation) =>
-  //     arrIdConversation.push(item._id)
-  //   );
-  //   socket.emit('join_all_conversation', arrIdConversation);
-  // }, [listConversation]);
+  useEffect(() => {
+    const arrIdConversation: string[] = [];
+    listConversation.map((item: Conversation) =>
+      arrIdConversation.push(item._id)
+    );
+    socket.emit('join_all_conversation', arrIdConversation);
+  }, [listConversation]);
+
   useEffect(() => {
     dispatch(getAllConversationByUserRequest(userCurrent._id));
   }, [userCurrent]);
 
-  // useEffect(() => {
-  //   socket.on('newMessage', (newMessage: IMessage) => {
-  //     console.log('newMessage');
-  //     dispatch(getAllConversationByUserRequest(userCurrent._id));
-  //   });
-  // });
-
-  // useEffect(() => {
-  //   socket.on('createGroupSuccess', (data: string) => {
-  //     dispatch(getAllConversationByUserRequest(data));
-  //     // dispatch(getAllPeopleRequestRequest(data.userFrom));
-  //   });
-  //   // socket.on('createGroupToClient', (data: GroupItem) => {
-  //   //   for (const user of data.members) {
-  //   //     dispatch(getAllConversationByUserRequest(user.idUser._id));
-  //   //   }
-  //   // });
-
-  //   // socket.on('addMemberToGroupToClient', (data: GroupItem) => {
-  //   //   // dispatch(getAllConversationByUserRequest());
-  //   //   for (const user of data.members) {
-  //   //     dispatch(getAllConversationByUserRequest(user.idUser._id));
-  //   //   }
-  //   //   // dispatch(getAllPeopleRequestRequest(data.userFrom));
-  //   // });
-
-  //   socket.on('kickMemberOutGroupToClient', (data: GroupItem) => {
-  //     for (const user of data.members) {
-  //       // dispatch(getUserByIdRequest(user.idUser._id));
-  //       dispatch(getAllConversationByUserRequest(user.idUser._id));
-  //     }
-  //   });
-
-  // socket.on('leaveGroupToClient', (data: any) => {
-  //   // dispatch(getAllMessageByConversationRequest(conversation._id));
-  //   // for (const user of conversation.members) {
-  //   //   dispatch(getUserByIdRequest(user.idUser._id));
-  //   //   dispatch(getAllConversationByUserRequest(user.idUser._id));
-  //   // }
-  // });
-
-  // socket.on('leaveGroupSuccess', (id: string) => {
-  //   // dispatch(getAllMessageByConversationRequest(conversation._id));
-
-  //   dispatch(getAllConversationByUserRequest(id));
-  // });
-
-  //   dispatch(getUserByIdRequest(userCurrent._id));
-
-  //   socket.on('seen_message', () => {
-  //     dispatch(getAllConversationByUserRequest(userCurrent._id));
-  //   });
-  // }, []);
-
-  // useEffect(() => {
-  //   socket.on('leaveGroupToClient', (data: any) => {
-  //     const { conversation, userId } = data;
-  //     dispatch(
-  //       getAllMessageByConversationRequest(`${conversation.idConversation}`)
-  //     );
-  //     const list = conversation.members.filter(
-  //       (u: any) => u.idUser._id !== userId
-  //     );
-  //     for (const user of list) {
-
-  //       dispatch(getAllConversationByUserRequest(`${user.idUser._id}`));
-  //     }
-  //   });
-  //   dispatch(getUserByIdRequest(userCurrent._id));
-  //   return () => socket.off('leaveGroupToClient');
-  // }, []);
-  // useEffect(() => {
-  //   socket.on('leaveGroupSuccess', (data: string) => {
-  //     dispatch(getAllConversationByUserRequest(data));
-
-  //     // for (const user of conversation.members) {
-  //     //   dispatch(getUserByIdRequest(user.idUser._id));
-  //     //   dispatch(getAllConversationByUserRequest(user.idUser._id));
-  //     // }
-  //   });
-  //   return () => socket.off('leaveGroupSuccess');
-  // }, []);
-  // socket.on('kickMemberOutGroupToClient', (data: string) => {
-
-  //   dispatch(getAllConversationByUserRequest(data));
-  // });
-
-  // socket.on('leaveGroupSuccess', (data: string) => {
-  //   dispatch(getAllConversationByUserRequest(data));
-  //   // dispatch(getAllPeopleRequestRequest(data.userFrom));
-  // });
-
-  // useEffect(() => {
-  //   socket.on('newMessage', () => {
-  //     dispatch(getAllConversationByUserRequest(userCurrent._id));
-  //   });
-  // });
-
-  const handleChat = (item: User, idConversation: string) => {
+  const handleChat = (item: User, conversation: Conversation) => {
     const newStateChatWith = {
       _id: '',
       idUser: item.idUser,
-      idConversation: idConversation,
+      idConversation: conversation._id,
       type: 'single',
     };
 
-    dispatch(getAllMessageByConversationRequest(idConversation));
+    dispatch(getAllMessageByConversationRequest(conversation._id));
     dispatch(saveInfoChatWith(newStateChatWith));
     dispatch(showChat());
-    socket.emit('seen_message', idConversation);
   };
 
   const handleChatGroup = (item: Group, idConversation: string) => {
@@ -164,7 +58,6 @@ const Conversations = () => {
     dispatch(getAllMessageByConversationRequest(idConversation));
     dispatch(saveInfoChatWith(newStateChatGroup));
     dispatch(showChat());
-    socket.emit('seen_message', idConversation);
   };
 
   const renderSingleConversation = (conversation: Conversation) => {
@@ -172,10 +65,20 @@ const Conversations = () => {
       (item: User) => item.idUser._id !== userCurrent._id
     )[0];
 
+    const flag = conversation.lastMessage
+      ? conversation.lastMessage.seen.includes(userCurrent._id)
+      : false;
+
     return (
       <div
-        className="conversations_item"
-        onClick={() => handleChat(chatWithUser, conversation._id)}
+        className={
+          chatWith
+            ? chatWith.idConversation === conversation._id
+              ? 'conversations_item_active'
+              : 'conversations_item'
+            : 'conversations_item'
+        }
+        onClick={() => handleChat(chatWithUser, conversation)}
       >
         <div className="avatar" key={conversation._id}>
           <img src={chatWithUser.idUser.avatar} alt="avatar"></img>
@@ -196,11 +99,7 @@ const Conversations = () => {
                   </div>
                 ) : conversation.lastMessage ? (
                   <div
-                    className={
-                      conversation.lastMessage
-                        ? `lastmessage`
-                        : `lastmessage not_seen`
-                    }
+                    className={flag ? `lastmessage` : `lastmessage not_seen`}
                   >
                     {conversation.lastMessage.message}
                   </div>
@@ -223,9 +122,18 @@ const Conversations = () => {
   };
 
   const renderGroupConversation = (conversation: Conversation) => {
+    const flag = conversation.lastMessage
+      ? conversation.lastMessage.seen.includes(userCurrent._id)
+      : false;
     return (
       <div
-        className="conversations_item"
+        className={
+          chatWith
+            ? chatWith.idConversation === conversation._id
+              ? 'conversations_item_active'
+              : 'conversations_item'
+            : 'conversations_item'
+        }
         onClick={() => {
           handleChatGroup(conversation, conversation._id);
         }}
@@ -249,11 +157,7 @@ const Conversations = () => {
                   </div>
                 ) : (
                   <div
-                    className={
-                      conversation.lastMessage
-                        ? 'lastmessage'
-                        : `lastmessage not_seen`
-                    }
+                    className={flag ? 'lastmessage' : `lastmessage not_seen`}
                   >
                     {conversation.lastMessage.message}
                   </div>

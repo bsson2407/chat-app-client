@@ -52,8 +52,8 @@ const ModalAddMember = ({ open, handleClose }: any) => {
     };
     dispatch(addMemberToGroupRequest(data));
     // socket.emit('addMemberToGroup', data);
-    dispatch(getAllMessageByConversationRequest(chatWith.idConversation));
-    dispatch(getUserByIdRequest(userCurrent._id));
+    // dispatch(getAllMessageByConversationRequest(chatWith.idConversation));
+    // dispatch(getUserByIdRequest(userCurrent._id));
 
     handleClose();
   };

@@ -11,30 +11,24 @@ import { useDispatch, useSelector } from 'react-redux';
 import { searchUserRequest } from '../../../../redux/actions/UserAction';
 import { RootState } from '../../../../redux/reducers';
 import { useState } from 'react';
-
-type statusResult = {
-  isFriend: boolean;
-  isStranger: boolean;
-  requested: boolean;
-  isPeopleRequest: boolean;
-  isMe: boolean;
-};
+import {
+  isFriendAction,
+  isMeAction,
+  isMyRequestAction,
+  isPeopleRequestAction,
+  isStrangerAction,
+} from '../../../../redux/actions/FriendAction';
 
 const AddFriend = ({ open, handleClose }: any) => {
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
-
-  const [statusResult, setStatusResult] = useState<statusResult>({
-    isFriend: false,
-    isStranger: false,
-    requested: false,
-    isPeopleRequest: false,
-    isMe: false,
-  });
-
   const { resultSearch, error, userCurrent }: any = useSelector<RootState>(
     (state) => state.user
   );
+  const [list, setList] = useState(false);
+  const { isFriend, isStranger, isMyRequest, isPeopleRequest, isMe }: any =
+    useSelector<RootState>((state) => state.friend);
+
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState('');
 
@@ -42,11 +36,13 @@ const AddFriend = ({ open, handleClose }: any) => {
 
   const onSubmit: any = (data: Email) => {
     if (email === '') {
-      setErrors('Chưa nhập email');
+      setList(false);
       return;
     }
     dispatch(searchUserRequest(data));
+    setList(true);
   };
+  console.log('resultSearch', resultSearch);
 
   useEffect(() => {
     if (resultSearch) {
@@ -63,90 +59,54 @@ const AddFriend = ({ open, handleClose }: any) => {
       const isMe = resultSearch._id === userCurrent._id;
 
       if (isFriend) {
-        setStatusResult({
-          isStranger: false,
-          requested: false,
-          isPeopleRequest: false,
-          isMe: false,
-          isFriend: true,
-        });
+        console.log(1);
+        dispatch(isFriendAction());
       } else if (requested) {
-        setStatusResult({
-          isStranger: false,
-          isPeopleRequest: false,
-          isMe: false,
-          requested: true,
-          isFriend: false,
-        });
+        console.log(2);
+
+        dispatch(isMyRequestAction());
       } else if (isPeopleRequest) {
-        setStatusResult({
-          isFriend: false,
-          isStranger: false,
-          requested: false,
-          isMe: false,
-          isPeopleRequest: true,
-        });
+        console.log(3);
+
+        dispatch(isPeopleRequestAction());
       } else if (isMe) {
-        setStatusResult({
-          isFriend: false,
-          isStranger: false,
-          requested: false,
-          isPeopleRequest: false,
-          isMe: true,
-        });
+        console.log(4);
+
+        dispatch(isMeAction());
       } else {
-        setStatusResult({
-          isFriend: false,
-          requested: false,
-          isPeopleRequest: false,
-          isMe: false,
-          isStranger: true,
-        });
+        console.log(5);
+
+        dispatch(isStrangerAction());
       }
     }
   }, [userCurrent, resultSearch]);
 
   useEffect(() => {
-    socket.on('requestAddFriendSuccess', () => {
-      setStatusResult({
-        isFriend: false,
-        isStranger: false,
-        isPeopleRequest: false,
-        isMe: false,
-        requested: true,
-      });
+    socket.on('requestAddFriendToClient', (data: any) => {
+      console.log('setStatusResult');
+      dispatch(isMyRequestAction());
     });
+    return () => socket.off('requestAddFriendToClient');
+  }, []);
+  useEffect(() => {
+    socket.on('deniedAddFriendToClient', () => {
+      dispatch(isStrangerAction());
+    });
+    return () => socket.off('deniedAddFriendToClient');
+  }, []);
+  useEffect(() => {
+    socket.on('acceptAddFriendToClient', () => {
+      dispatch(isFriendAction());
+    });
+    return () => socket.off('acceptAddFriendToClient');
+  }, []);
 
-    socket.on('deniedAddFriendSuccess', () => {
-      setStatusResult({
-        isFriend: false,
-        requested: false,
-        isPeopleRequest: false,
-        isMe: false,
-        isStranger: true,
-      });
+  useEffect(() => {
+    socket.on('cancelRequestAddFriendToClient', () => {
+      dispatch(isStrangerAction());
     });
-
-    socket.on('acceptAddFriendSuccess', () => {
-      setStatusResult({
-        isStranger: false,
-        requested: false,
-        isPeopleRequest: false,
-        isMe: false,
-        isFriend: true,
-      });
-    });
-
-    socket.on('cancelRequestAddFriendSuccessForSender', () => {
-      setStatusResult({
-        isFriend: false,
-        requested: false,
-        isPeopleRequest: false,
-        isMe: false,
-        isStranger: true,
-      });
-    });
-  }, [statusResult]);
+    return () => socket.off('cancelRequestAddFriendToClient');
+  }, []);
 
   const handleAddFriend = () => {
     const data = { userFrom: userCurrent._id, userTo: resultSearch._id };
@@ -180,7 +140,7 @@ const AddFriend = ({ open, handleClose }: any) => {
           </div>
 
           <div className="results">
-            {resultSearch ? (
+            {list && resultSearch ? (
               <>
                 <div className="lastresults">Kết quả tìm kiếm</div>
                 <div className="item">
@@ -195,42 +155,24 @@ const AddFriend = ({ open, handleClose }: any) => {
 
                   {/* cần phải check resultSearch._id có tồn tại trong request hay không */}
                   <div className="addfriend">
-                    {statusResult.isFriend ? (
+                    {isFriend ? (
                       <span>Bạn bè</span>
-                    ) : statusResult.isStranger ? (
+                    ) : isStranger ? (
                       <span onClick={() => handleAddFriend()}>Kết bạn</span>
-                    ) : statusResult.requested ? (
+                    ) : isMyRequest ? (
                       <span onClick={() => handleDeleteRequestFriend()}>
                         Hủy lời mời kết bạn
                       </span>
-                    ) : statusResult.isPeopleRequest ? (
+                    ) : isPeopleRequest ? (
                       <>
                         <span>Từ chối</span> <span>Chấp nhận</span>
                       </>
-                    ) : statusResult.isMe ? (
+                    ) : isMe ? (
                       ''
                     ) : (
                       ''
                     )}
                   </div>
-                </div>
-              </>
-            ) : (
-              ''
-            )}
-            {errors ? (
-              <>
-                <div>
-                  <span className="error">{errors}</span>
-                </div>
-              </>
-            ) : (
-              ''
-            )}
-            {error ? (
-              <>
-                <div>
-                  <span className="error">{error}</span>
                 </div>
               </>
             ) : (

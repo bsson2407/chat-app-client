@@ -1,7 +1,7 @@
 export const FriendTypes = {
   IS_STRANGER: 'IS_STRANGER',
   IS_FRIEND: 'IS_FRIEND',
-  REQUEST: 'REQUEST',
+  IS_MY_REQUEST: 'REQUEST',
   IS_PEOPLE_REQUEST: 'IS_PEOPLE_REQUEST',
   IS_ME: 'IS_ME',
 };
@@ -9,7 +9,7 @@ export const FriendTypes = {
 export type IsFriend = {
   isFriend: boolean;
   isStranger: boolean;
-  requested: boolean;
+  isMyRequest: boolean;
   isPeopleRequest: boolean;
   isMe: boolean;
 };

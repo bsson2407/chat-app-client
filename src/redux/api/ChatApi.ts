@@ -8,8 +8,10 @@ export const getAllConversationByUser = (id: string): Promise<Conversation[]> =>
 export const sendMessage = (data: any): Promise<IMessage> =>
   axiosClient.post(`/chat/message`, data);
 
-export const sendImage = (data: any): Promise<IMessage> =>
-  axiosClient.post(`/chat/images`, data);
+export const sendImage = (data: any): Promise<IMessage> => {
+  console.log('sendImage', data);
+  return axiosClient.post(`/chat/images`, data);
+};
 // export const sendVideo = (data: any): Promise<IMessage> =>
 //   axiosClient.post(`/chat/video`, data);
 export const sendFile = (data: any): Promise<IMessage> =>

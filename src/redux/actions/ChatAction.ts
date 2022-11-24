@@ -114,6 +114,7 @@ export const sendMessagesRequest = (data: any) => {
   };
 };
 export const sendMessagesSuccess = (data: IMessage) => {
+  console.log('sendMessagesSuccess', data);
   getCurrentSocket().emit('sendMessage', data);
   return {
     type: ChatTypes.SEND_MESSAGES_SUCCESS,
@@ -129,13 +130,15 @@ export const sendMessagesFailure = (message: Message) => {
 
 // -------------- UPDATE AVATAR
 export const sendImagesRequest = (data: any) => {
+  console.log('sendImagesRequest', data);
   return {
     type: ChatTypes.SEND_IMAGES_REQUEST,
     payload: data,
   };
 };
 export const sendImagesSuccess = (data: IMessage) => {
-  // getCurrentSocket().emit('send_message', data);
+  console.log('sendImagesSuccess', data);
+
   getCurrentSocket().emit('sendMessage', data);
 
   return {

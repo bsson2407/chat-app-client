@@ -15,6 +15,8 @@ import {
   deleteMessageAllMeRequest,
   getAllMessageByConversationRequest,
 } from '../../../../redux/actions/ChatAction';
+import { unFriendRequest } from '../../../../redux/actions/UserAction';
+import { offShow } from '../../../../redux/actions/OptionLayoutAction';
 const OtherProfile = () => {
   const dispatch = useDispatch();
   const { friendProfile, userCurrent }: any = useSelector<RootState>(
@@ -48,12 +50,14 @@ const OtherProfile = () => {
 
   const handleUnFriend = () => {
     const data = {
-      userFrom: userCurrent._id,
-      userTo: friendProfile._id,
+      idUser: userCurrent._id,
+      idFriend: friendProfile._id,
       idConversation: chatWith.idConversation,
     };
-
-    socket.emit('un_friend', data);
+    if (window.confirm(`Bạn chắc chắn muốn xóa bạn?`)) {
+      dispatch(offShow());
+      dispatch(unFriendRequest(data));
+    }
   };
 
   const renderListImage = (message: IMessage) => {

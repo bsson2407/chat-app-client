@@ -19,7 +19,8 @@ const CallModal = () => {
   const { call, peer, socket }: any = useSelector<RootState>((state) => state);
   const { userCurrent }: any = useSelector<RootState>((state) => state.user);
   const { chatWith }: any = useSelector<RootState>((state) => state.chat);
-
+  console.log('peerCall', peer);
+  console.log('callCall', call);
   const [hours, setHours] = useState(0);
   const [mins, setMins] = useState<number>(0);
   const [second, setSecond] = useState<number>(0);
@@ -112,29 +113,6 @@ const CallModal = () => {
   // Stream Media
   const openStream = (video: any) => {
     const config = { audio: true, video };
-    // if (navigator.mediaDevices === undefined) {
-    //   navigator.mediaDevices = {};
-    // }
-    //  if (navigator.mediaDevices.getUserMedia === undefined) {
-    //    navigator.mediaDevices.getUserMedia = function (constraints) {
-    //      // First get ahold of the legacy getUserMedia, if present
-    //      var getUserMedia =
-    //        navigator. || navigator.mozGetUserMedia;
-
-    //      // Some browsers just don't implement it - return a rejected promise with an error
-    //      // to keep a consistent interface
-    //      if (!getUserMedia) {
-    //        return Promise.reject(
-    //          new Error('getUserMedia is not implemented in this browser')
-    //        );
-    //      }
-
-    //      // Otherwise, wrap the call to the old navigator.getUserMedia with a Promise
-    //      return new Promise(function (resolve, reject) {
-    //        getUserMedia.call(navigator, constraints, resolve, reject);
-    //      });
-    //    };
-    //  }
 
     return navigator.mediaDevices.getUserMedia(config);
   };
@@ -147,6 +125,7 @@ const CallModal = () => {
   // Answer Call
   const handleAnswer = () => {
     openStream(call.video).then((stream) => {
+      console.log(call.peerId);
       playStream(youVideo.current, stream);
       const track = stream.getTracks();
       setTracks(track);
@@ -318,68 +297,3 @@ const CallModal = () => {
 };
 
 export default CallModal;
-// import { Grid, Typography, Paper, makeStyles } from '@material-ui/core';
-
-// const useStyles = makeStyles((theme) => ({
-//   video: {
-//     width: '550px',
-//     [theme.breakpoints.down('xs')]: {
-//       width: '300px',
-//     },
-//   },
-//   gridContainer: {
-//     justifyContent: 'center',
-//     [theme.breakpoints.down('xs')]: {
-//       flexDirection: 'column',
-//     },
-//   },
-//   paper: {
-//     padding: '10px',
-//     border: '2px solid black',
-//     margin: '10px',
-//   },
-// }));
-
-// const VideoPlayer = () => {
-//   const { name, callAccepted, myVideo, userVideo, callEnded, stream, call } =
-//     useContext(SocketContext);
-//   const classes = useStyles();
-
-//   return (
-//     <Grid container className={classes.gridContainer}>
-//       {stream && (
-//         <Paper className={classes.paper}>
-//           <Grid item xs={12} md={6}>
-//             <Typography variant="h5" gutterBottom>
-//               {name || 'Name'}
-//             </Typography>
-//             <video
-//               playsInline
-//               muted
-//               ref={myVideo}
-//               autoPlay
-//               className={classes.video}
-//             />
-//           </Grid>
-//         </Paper>
-//       )}
-//       {callAccepted && !callEnded && (
-//         <Paper className={classes.paper}>
-//           <Grid item xs={12} md={6}>
-//             <Typography variant="h5" gutterBottom>
-//               {call.name || 'Name'}
-//             </Typography>
-//             <video
-//               playsInline
-//               ref={userVideo}
-//               autoPlay
-//               className={classes.video}
-//             />
-//           </Grid>
-//         </Paper>
-//       )}
-//     </Grid>
-//   );
-// };
-
-// export default VideoPlayer;

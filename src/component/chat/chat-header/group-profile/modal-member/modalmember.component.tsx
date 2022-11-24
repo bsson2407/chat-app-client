@@ -33,10 +33,13 @@ const ModalMember = ({ open, handleClose }: any) => {
     const data = {
       idConversation: chatWith.idConversation,
       userId: userCurrent._id,
-      deleteUserId: e,
+      deleteUserId: e._id,
     };
+
+    if (window.confirm(`Bạn chắc chắn muốn xóa ${e.name}  ra khỏi nhóm ?`)) {
+      dispatch(kickMemberOutGroupRequest(data));
+    }
     // socket.emit(data.deleteUserId);
-    dispatch(kickMemberOutGroupRequest(data));
     // dispatch(getAllMessageByConversationRequest(chatWith.idConversation));
     // dispatch(getUserByIdRequest(userCurrent._id));
   };
@@ -116,7 +119,7 @@ const ModalMember = ({ open, handleClose }: any) => {
                                             className="menu-item"
                                             onClick={() =>
                                               handleDeleteMemberOutGroup(
-                                                friend.idUser._id
+                                                friend.idUser
                                               )
                                             }
                                           >
@@ -127,20 +130,6 @@ const ModalMember = ({ open, handleClose }: any) => {
                                         ''
                                       )}
                                     </span>
-                                    {/* <span
-                                      className="icon-delete"
-                                      onClick={() =>
-                                        handleDeleteMemberOutGroup(
-                                          friend.idUser._id
-                                        )
-                                      }
-                                    >
-                                      <FontAwesomeIcon
-                                        className="icon"
-                                        icon={faUserMinus}
-                                      />
-                                      <span>Xóa khỏi nhóm</span>
-                                    </span> */}
                                   </>
                                 )}
                           </div>

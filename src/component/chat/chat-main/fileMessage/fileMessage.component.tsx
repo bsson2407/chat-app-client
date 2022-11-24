@@ -15,8 +15,8 @@ const FileMessage = ({ fileUrl, message }: any) => {
   };
 
   const showViewFile = (file: any) => {
-    console.log(setPathFile(file.split(':')[file.split(':').length + 1]));
-
+    // console.log(setPathFile(file.split(':')[file.split(':').length + 1]));
+    console.log(file);
     return (
       <Modal
         open={viewFile}
@@ -24,7 +24,7 @@ const FileMessage = ({ fileUrl, message }: any) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          minHeight: '900px',
+          minHeight: '600px',
           minWidth: '600px',
         }}
         onClose={handleCloseModal}
@@ -35,7 +35,7 @@ const FileMessage = ({ fileUrl, message }: any) => {
         }}
       >
         <iframe
-          style={{ height: '900px', width: '700px' }}
+          style={{ height: '700px', width: '900px', backgroundColor: 'white' }}
           src={file}
           title=""
         ></iframe>
@@ -54,7 +54,7 @@ const FileMessage = ({ fileUrl, message }: any) => {
       ) : pathFile === 'txt' ? (
         <img src="images/icons/txt_icon.png" alt="" />
       ) : (
-        ''
+        <img src="images/icons/blank_icon.png" alt="" />
       )}
       <span>{message}</span>
       <a href={fileUrl} download>

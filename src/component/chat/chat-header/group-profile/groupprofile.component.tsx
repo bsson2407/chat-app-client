@@ -62,16 +62,20 @@ const GroupProfile = () => {
       idConversation: chatWith.idConversation,
       userId: userCurrent._id,
     };
-    dispatch(deleteMessageAllMeRequest(data));
-    dispatch(getAllMessageByConversationRequest(chatWith.idConversation));
+    if (window.confirm(`Bạn chắc chắn muốn xóa toàn bộ tin nhắn`)) {
+      dispatch(deleteMessageAllMeRequest(data));
+      dispatch(getAllMessageByConversationRequest(chatWith.idConversation));
+    }
   };
 
   const handleDeleteGroup = () => {
     const data = {
       idConversation: chatWith.idConversation,
     };
-    dispatch(offShow());
-    dispatch(deleteGroupRequest(data));
+    if (window.confirm(`Bạn chắc chắn muốn xóa nhóm ${chatWith.name}?`)) {
+      dispatch(offShow());
+      dispatch(deleteGroupRequest(data));
+    }
   };
 
   const handleLeaveGroup = () => {
@@ -81,8 +85,10 @@ const GroupProfile = () => {
       userId: userCurrent._id,
     };
     // dispatch(showOptionGroupProfile(false));
-    dispatch(offShow());
-    dispatch(leaveGroupRequest(data));
+    if (window.confirm(`Bạn chắc chắn muốn rời khỏi nhóm ${chatWith.name}?`)) {
+      dispatch(offShow());
+      dispatch(leaveGroupRequest(data));
+    }
     // dispatch(getConversationByIdRequest(userCurrent._id));
   };
 

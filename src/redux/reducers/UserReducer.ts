@@ -122,6 +122,29 @@ export const UserReducer = (state = initialState, action: UserLoginAction) => {
         error: action.payload,
       };
     }
+
+    //-------------- UN FRIEND
+    case UserTypes.UN_FRIEND_REQUEST: {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }
+    case UserTypes.UN_FRIEND_SUCCESS: {
+      // getCurrentSocket().
+      return {
+        ...state,
+        isLoading: false,
+        // listConversation: newListConversation,
+      };
+    }
+    case UserTypes.UN_FRIEND_FAILURE: {
+      return {
+        ...state,
+        isLoading: false,
+        error: action.payload,
+      };
+    }
     // ------------- GET OTP BY EMAIL
     case UserTypes.GET_EMAIL_REQUEST: {
       return {
@@ -269,8 +292,6 @@ export const UserReducer = (state = initialState, action: UserLoginAction) => {
       };
     }
     case UserTypes.GET_USER_BY_ID_SUCCESS: {
-      console.log('GET_USER_BY_ID_SUCCESS');
-      console.log(!state.userCurrent);
       if (state.userCurrent) {
         return {
           ...state,

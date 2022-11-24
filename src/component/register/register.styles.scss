@@ -12,6 +12,12 @@
   font-weight: 500;
   border: 0 none;
 }
+
+@mixin shrinkLabel {
+  top: -14px;
+  font-size: 12px;
+  color: black;
+}
 .container {
   width: 100%;
   min-height: 100vh;
@@ -49,6 +55,21 @@
         width: 100%;
         margin-bottom: 2rem;
         border-bottom: 1px solid #eee;
+
+        .form-input-label {
+          color: grey;
+          font-size: 16px;
+          font-weight: normal;
+          position: absolute;
+          pointer-events: none;
+          left: 5px;
+          top: 10px;
+          transition: 300ms ease all;
+
+          &.shrink {
+            @include shrinkLabel();
+          }
+        }
 
         input {
           width: 100%;

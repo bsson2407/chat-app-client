@@ -15,8 +15,15 @@ import {
 import OtherProfile from '../../component/chat/chat-header/other-profile/otherprofile.component';
 import { useNavigate } from 'react-router-dom';
 import GroupProfile from '../../component/chat/chat-header/group-profile/groupprofile.component';
-import { getAllConversationByUserRequest } from '../../redux/actions/ChatAction';
+import {
+  getAllConversationByUserRequest,
+  getAllMessageByConversationRequest,
+  pushNewMesssgeToListMessage,
+  saveInfoChatWith,
+} from '../../redux/actions/ChatAction';
 import { GroupItem } from '../../redux/types/UserTypes';
+import { IMessage } from '../../redux/types/ChatTypes';
+import { offShow } from '../../redux/actions/OptionLayoutAction';
 type Data = {
   userFrom: string;
   userTo: string;
@@ -40,7 +47,6 @@ const HomePage = () => {
   // const handleOtherProfile = (): void => {
   //   setOthProfile(!othProfile);
   // };
-  console.log(userCurrent);
 
   useEffect(() => {
     if (tokenLocalStorage === null || refeshTokenLocalStorage === null) {
@@ -66,120 +72,108 @@ const HomePage = () => {
   useEffect(() => {
     // ------ JOIN ROOM
     socket.emit('join_room', userCurrent);
+  }, [userCurrent]);
+  useEffect(() => {
+    socket.on('requestAddFriendToClient', (data: any) => {
+      dispatch(getUserByIdRequest(userCurrent._id));
+      return () => socket.off('requestAddFriendToClient');
+    });
+  }, [userCurrent]);
 
-    socket.on('requestAddFriendToClient', (data: Data) => {
-      dispatch(getUserByIdRequest(data.userTo));
+  useEffect(() => {
+    socket.on('deniedAddFriendToClient', (data: any) => {
+      dispatch(getUserByIdRequest(userCurrent._id));
+    });
+    return () => socket.off('deniedAddFriendToClient');
+  }, [userCurrent]);
+
+  useEffect(() => {
+    socket.on('acceptAddFriendToClient', (data: any) => {
+      dispatch(getUserByIdRequest(userCurrent._id));
+    });
+    return () => socket.off('acceptAddFriendToClient');
+  }, [userCurrent]);
+
+  useEffect(() => {
+    socket.on('cancelRequestAddFriendToClient', (data: any) => {
+      dispatch(getUserByIdRequest(userCurrent._id));
+    });
+    return () => socket.off('cancelRequestAddFriendToClient');
+  }, [userCurrent]);
+
+  // useEffect(() => {
+  //   socket.on('newMessage', (data: any) => {
+  //     console.log('newMessageHomePage');
+  //     dispatch(getAllConversationByUserRequest(userCurrent._id));
+  //     dispatch(getAllMessageByConversationRequest(data._id));
+  //     // dispatch(saveInfoChatWith(data));
+  //   });
+
+  //   return () => socket.off('newMessage');
+  // }, [userCurrent]);
+
+  useEffect(() => {
+    socket.on('newMessage', (newMessage: IMessage) => {
+      console.log('newMessageHome', newMessage);
+      dispatch(getAllConversationByUserRequest(userCurrent._id));
+      if (chatWith.idConversation === newMessage.idConversation) {
+        dispatch(pushNewMesssgeToListMessage(newMessage));
+      }
     });
 
-    socket.on('deniedAddFriendToClient', (data: Data) => {
-      dispatch(getUserByIdRequest(data.userTo));
+    return () => socket.off('newMessage');
+  }, [userCurrent, chatWith]);
+
+  useEffect(() => {
+    socket.on('seenMessageToClient', (data: any) => {
+      console.log('seenMessageHome');
+      dispatch(getAllConversationByUserRequest(userCurrent._id));
+      if (chatWith.idConversation === data.idConversation) {
+        console.log('seenMessageHomeRequest');
+        dispatch(getAllMessageByConversationRequest(data.idConversation));
+      }
     });
 
-    socket.on('acceptAddFriendSuccess', (data: Data) => {
-      dispatch(getUserByIdRequest(data.userFrom));
-      // dispatch(getAllPeopleRequestRequest(data.userFrom));
-    });
-
-    socket.on('acceptAddFriendToClient', (data: Data) => {
-      dispatch(getUserByIdRequest(data.userTo));
-    });
-
-    // socket.on('createGroupSuccess', (data: string) => {
-    //   dispatch(getUserByIdRequest(data));
-
-    //   // dispatch(getAllPeopleRequestRequest(data.userFrom));
-    // });
-    // socket.on('createGroupToClient', (data: GroupItem) => {
-    //   // dispatch(getUserByIdRequest(data));
-    //   dispatch(getAllConversationByUserRequest(userCurrent._id));
-
-    //   // for (const user of data.members) {
-    //   //   dispatch(getAllConversationByUserRequest(user.idUser._id));
-    //   // }
-    //   // dispatch(getAllPeopleRequestRequest(data.userFrom));
-    // });
-
-    // socket.on('kickMemberOutGroupToClient', (conversation: GroupItem) => {
-    //   dispatch(getAllConversationByUserRequest(userCurrent._id));
-    // });
-    // socket.on('kickMemberOutGroupToDeleteUser', (data: string) => {
-    //   dispatch(getAllConversationByUserRequest(data));
-    // });
-
-    socket.on('cancelRequestAddFriendSuccess', (data: Data) => {
-      dispatch(getUserByIdRequest(data.userTo));
-    });
-
-    // socket.on('acceptAddFriendToClient', (data: Data) => {
-    //   dispatch(getUserByIdRequest(data.userTo));
-    // });
-
-    // ------ ACCEPT A REQUEST
-    // socket.on('accept_request_friend_success', (idUser: string) => {
-    //   dispatch(getUserByIdRequest(idUser));
-    // });
-    // socket.on('accept_request_friend', (idUser: string) => {
-    //   dispatch(getUserByIdRequest(idUser));
-    // });
-
-    // ------ DONT ACCEPT A REQUEST
-    // socket.on('dont_accept_request_friend_success', (idUser: string) => {
-
-    //   dispatch(getUserByIdRequest(idUser));
-    // });
-    // socket.on('dont_accept_request_friend', (idUser: string) => {
-
-    //   dispatch(getUserByIdRequest(idUser));
-    // });
-
-    // socket.on('leaveGroupToClient', (data: GroupItem) => {
-    //   dispatch(getAllConversationByUserRequest(userCurrent._id));
-
-    //   // for (const user of data.members) {
-    //   //   dispatch(getAllConversationByUserRequest(user.idUser._id));
-    //   // }
-    // });
-
-    // ------ DONT ACCEPT A REQUEST
-    socket.on('un_friend_success', (idUser: string) => {
-      dispatch(getUserByIdRequest(idUser));
-    });
-    socket.on('un_friend', (idUser: string) => {
-      dispatch(getUserByIdRequest(idUser));
-    });
-
-    //------ JOIN CONVERSATION
-    // socket.on('join_conversation', (idConversation: string) => {});
-
-    // socket.on('newMessage', () => {
-    //   dispatch(getAllConversationByUserRequest(userCurrent._id));
-    // });
+    return () => socket.off('seenMessageToClient');
   }, [userCurrent]);
 
   useEffect(() => {
     socket.on('changeAvatarGroupToClient', (data: GroupItem) => {
       dispatch(getAllConversationByUserRequest(userCurrent._id));
+
+      if (chatWith.idConversation === data.idConversation) {
+        dispatch(getAllMessageByConversationRequest(data._id));
+        dispatch(saveInfoChatWith(data));
+      }
     });
 
     return () => socket.off('changeAvatarGroupToClient');
-  }, [userCurrent]);
+  }, [userCurrent, chatWith]);
 
   useEffect(() => {
     socket.on('changeNameGroupToClient', (data: GroupItem) => {
       dispatch(getAllConversationByUserRequest(userCurrent._id));
+      if (chatWith.idConversation === data.idConversation) {
+        dispatch(getAllMessageByConversationRequest(data._id));
+        dispatch(saveInfoChatWith(data));
+      }
     });
 
     return () => socket.off('changeNameGroupToClient');
-  }, [userCurrent]);
+  }, [userCurrent, chatWith]);
   useEffect(() => {
     socket.on('changeLeaderToClient', (data: GroupItem) => {
       console.log('changeLeaderToClient', data);
       // for(const member for data.members)
       dispatch(getAllConversationByUserRequest(userCurrent._id));
+      if (chatWith.idConversation === data.idConversation) {
+        dispatch(getAllMessageByConversationRequest(data._id));
+        dispatch(saveInfoChatWith(data));
+      }
     });
 
     return () => socket.off('changeLeaderToClient');
-  }, [userCurrent]);
+  }, [userCurrent, chatWith]);
 
   useEffect(() => {
     socket.on('deleteGroupToClient', (data: GroupItem) => {
@@ -190,20 +184,39 @@ const HomePage = () => {
   }, [userCurrent]);
 
   useEffect(() => {
+    socket.on('unFriendToClient', (data: any) => {
+      console.log('unFriendToClient');
+      dispatch(getAllConversationByUserRequest(userCurrent._id));
+      dispatch(getUserByIdRequest(userCurrent._id));
+    });
+
+    return () => socket.off('unFriendToClient');
+  }, [userCurrent]);
+  useEffect(() => {
     socket.on('leaveGroupToClient', (data: GroupItem) => {
       dispatch(getAllConversationByUserRequest(userCurrent._id));
+      if (chatWith.idConversation === data.idConversation) {
+        dispatch(getAllMessageByConversationRequest(data._id));
+        dispatch(saveInfoChatWith(data));
+      }
     });
 
     return () => socket.off('leaveGroupToClient');
-  }, [userCurrent]);
+  }, [userCurrent, chatWith]);
 
   useEffect(() => {
-    socket.on('kickMemberOutGroupToClient', (conversation: GroupItem) => {
+    socket.on('kickMemberOutGroupToClient', (data: GroupItem) => {
+      console.log('kickMemberOutGroupToClient', userCurrent._id);
+
       dispatch(getAllConversationByUserRequest(userCurrent._id));
+      if (chatWith.idConversation === data.idConversation) {
+        dispatch(getAllMessageByConversationRequest(data._id));
+        dispatch(saveInfoChatWith(data));
+      }
     });
 
     return () => socket.off('kickMemberOutGroupToClient');
-  }, [userCurrent]);
+  }, [userCurrent, chatWith]);
 
   useEffect(() => {
     socket.on('kickMemberOutGroupToDeleteUser', (data: string) => {
@@ -211,13 +224,18 @@ const HomePage = () => {
     });
     return () => socket.off('kickMemberOutGroupToDeleteUser');
   }, [userCurrent]);
-
+  // console.log(chatWith);
   useEffect(() => {
     socket.on('addMemberToGroupToClient', (data: GroupItem) => {
       dispatch(getAllConversationByUserRequest(userCurrent._id));
+      console.log(chatWith.idConversation === data.idConversation);
+      if (chatWith.idConversation === data.idConversation) {
+        dispatch(getAllMessageByConversationRequest(data._id));
+        dispatch(saveInfoChatWith(data));
+      }
     });
     return () => socket.off('addMemberToGroupToClient');
-  }, [userCurrent]);
+  }, [userCurrent, chatWith]);
 
   useEffect(() => {
     socket.on('createGroupToClient', (data: GroupItem) => {

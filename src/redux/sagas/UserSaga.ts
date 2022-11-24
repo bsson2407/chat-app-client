@@ -22,6 +22,8 @@ import {
   searchUserExistSuccess,
   searchUserFailure,
   searchUserSuccess,
+  unFriendFailure,
+  unFriendSuccess,
   updateAvatarFailure,
   updateAvatarSuccess,
   updatePasswordFailure,
@@ -40,6 +42,7 @@ import {
   register,
   searchUser,
   searchUserExist,
+  unFriend,
   updateAvatar,
   updatePassword,
   updateProfile,
@@ -54,6 +57,7 @@ import {
 } from '../types/UserTypes';
 import { Actions } from '../types/CommonTypes';
 import { AxiosError } from 'axios';
+import { Conversation } from '../types/ChatTypes';
 
 function* RegisterSaga(action: Actions) {
   try {
@@ -119,6 +123,15 @@ function* GetEmailSaga(action: Actions) {
     yield put(getEmailSuccess(result));
   } catch (error) {
     yield put(getEmailFailure(error as Error));
+  }
+}
+
+function* UnFriendSaga(action: Actions) {
+  try {
+    const conversation: Conversation = yield call(unFriend, action.payload);
+    yield put(unFriendSuccess(conversation));
+  } catch (error) {
+    yield put(unFriendFailure(error as Error));
   }
 }
 
@@ -225,6 +238,7 @@ function* UserSaga() {
   yield takeLatest(UserTypes.CHECK_OTP_REQUEST, CheckOtpSaga);
   yield takeLatest(UserTypes.UPDATE_PASSWORD_REQUEST, UpdatePasswordSaga);
   yield takeLatest(UserTypes.GET_NEW_TOKEN_REQUEST, GetNewTokenSaga);
+  yield takeLatest(UserTypes.UN_FRIEND_REQUEST, UnFriendSaga);
 
   yield takeLatest(UserTypes.GET_ALL_FRIEND_REQUEST, GetAllFriendSaga);
   yield takeLatest(UserTypes.UPDATE_PROFILE_REQUEST, UpdateProfileSaga);

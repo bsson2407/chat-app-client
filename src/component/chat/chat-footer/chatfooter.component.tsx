@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   sendFileRequest,
@@ -11,23 +11,13 @@ import EmojiPicker from 'emoji-picker-react';
 
 const ChatFooter = (props: any) => {
   const dispatch = useDispatch();
+  const { socket }: any = useSelector<RootState>((state) => state);
 
   const [message, setMessage] = useState<string>('');
   const [showPicker, setShowPicker] = useState(false);
 
   const { userCurrent }: any = useSelector<RootState>((state) => state.user);
   const { chatWith }: any = useSelector<RootState>((state) => state.chat);
-  const [focus, setFocus] = useState<boolean>(false);
-
-  // useEffect(() => {
-  //   if (
-  //     focus === true
-  //     //   &&
-  //     //   listMessage[listMessage.length - 1].sender !== userCurrent._id
-  //   ) {
-  //     socket.emit('seen_message', chatWith.idConversation);
-  //   }
-  // }, [focus, socket, chatWith]);
 
   const onEmojiClick = (emojiObj: any) => {
     setMessage((prev) => prev + emojiObj.emoji);
@@ -36,20 +26,37 @@ const ChatFooter = (props: any) => {
   const handleSubmitForm = async (e: any) => {
     e.preventDefault();
     // const formData = new FormData();
-
-    if (message !== '') {
+    console.log('message.trim().length', message.trim().length);
+    if (message.trim()) {
       const data = {
         idConversation: chatWith.idConversation,
         idSender: userCurrent._id,
         message: message,
       };
+
       setMessage('');
       await dispatch(sendMessagesRequest(data));
+    } else {
+      setMessage('');
     }
+    // dispatch(getAllConversationByUserRequest(userCurrent._id));
+  };
+
+  const clickLike = async () => {
+    const data = {
+      idConversation: chatWith.idConversation,
+      idSender: userCurrent._id,
+      message: '👍',
+    };
+    await dispatch(sendMessagesRequest(data));
   };
 
   const handleFocus = () => {
-    setFocus(true);
+    const dataSocket = {
+      idUser: userCurrent._id,
+      idConversation: chatWith.idConversation,
+    };
+    socket.emit('seenMessage', dataSocket);
   };
 
   const handleFileVideoChange = (e: any) => {
@@ -86,6 +93,7 @@ const ChatFooter = (props: any) => {
       for (const fileImage of files) {
         if (fileImage) {
           formData.append('files', fileImage);
+          console.log('fileImage', fileImage);
         }
       }
       dispatch(sendImagesRequest(formData));
@@ -141,7 +149,6 @@ const ChatFooter = (props: any) => {
               setMessage(e.target.value);
             }}
             onFocus={() => handleFocus()}
-            onBlur={() => setFocus(false)}
           ></input>
         </div>
         <div className="list">
@@ -160,14 +167,14 @@ const ChatFooter = (props: any) => {
           </div>
 
           <div className="item">
-            {message ? (
+            {message.trim().length > 0 ? (
               <button>
                 <span className="like">
                   <i className="fas fa-paper-plane"></i>
                 </span>
               </button>
             ) : (
-              <span className="like">
+              <span className="like" onClick={clickLike}>
                 <i className="fas fa-thumbs-up"></i>
               </span>
             )}

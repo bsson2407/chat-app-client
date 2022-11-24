@@ -6,7 +6,6 @@ import { RootState } from '../../../redux/reducers';
 import {
   deleteMessageOnlyMeRequest,
   getAllMessageByConversationRequest,
-  pushNewMesssgeToListMessage,
   recallAMesssgeToListMessage,
 } from '../../../redux/actions/ChatAction';
 import { IMessage, User } from '../../../redux/types/ChatTypes';
@@ -26,7 +25,6 @@ const ChatMain = () => {
   const { chatWith, listMessage }: any = useSelector<RootState>(
     (state) => state.chat
   );
-
   const { socket }: any = useSelector<RootState>((state) => state);
   const { userCurrent }: any = useSelector<RootState>((state) => state.user);
 
@@ -45,7 +43,6 @@ const ChatMain = () => {
   };
   useEffect(() => {
     // socket.on('seen_message', () => {
-
     dispatch(getAllMessageByConversationRequest(chatWith.idConversation));
     // });
   }, [chatWith]);
@@ -66,15 +63,14 @@ const ChatMain = () => {
 
   useEffect(() => {
     socket.emit('join_conversation', chatWith.idConversation);
-    socket.on('newMessage', (newMessage: IMessage) => {
-      dispatch(pushNewMesssgeToListMessage(newMessage));
-    });
-  }, [chatWith]);
+  }, []);
 
   const renderMessageMe = (item: IMessage, index: number, arr: IMessage[]) => {
+    // console.log(item);
     const flag = item.deleteBy?.findIndex(
       (userIdele) => userIdele == userCurrent._id
     );
+
     const date = new Date(item.createdAt);
 
     return (
@@ -85,7 +81,7 @@ const ChatMain = () => {
               // HIDE AVATAR IF MESSAGE HAVE SENDER === PREVIOUS SENDER
               index > 0 && item.sender === arr[index - 1].sender ? (
                 <div className="avatar" style={{ opacity: '0' }}>
-                  <img src={'chatWith.idUser.avatar'} alt="avatar"></img>
+                  <img src={userCurrent.avatar} alt="avatar"></img>
                 </div>
               ) : (
                 <div className="avatar">
@@ -143,10 +139,14 @@ const ChatMain = () => {
 
                   <div className="more">
                     <span className="time">{`${date.getHours()}:${date.getMinutes()}`}</span>
-                    {item.seen ? (
-                      <span className="status">Đã xem</span>
-                    ) : (
-                      <span className="status">Đã nhận</span>
+                    {chatWith.type === 'single' && (
+                      <>
+                        {item.seen.includes(chatWith.idUser._id) ? (
+                          <span className="status">Đã xem</span>
+                        ) : (
+                          <span className="status">Đã nhận</span>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>
@@ -172,28 +172,33 @@ const ChatMain = () => {
     const chatGroupUser = chatWith.members.find(
       (itemUser: User) =>
         // itemUser.idUser._id === item.sender;
-        item.sender !== itemUser.idUser._id
+        item.sender === itemUser.idUser._id
     );
+    console.log('chatGroupUser', chatGroupUser);
     return (
       <>
-        {/* // HIDE AVATAR IF MESSAGE HAVE SENDER === PREVIOUS SENDER */}
-        {index > 0 && item.sender === arr[index - 1].sender ? (
-          <div className="avatar" style={{ opacity: '0' }}>
-            <img src={chatGroupUser.idUser.avatar} alt="avatar"></img>
-          </div>
-        ) : (
-          <div className="avatar">
-            <img src={chatGroupUser.idUser.avatar} alt="avatar"></img>
-          </div>
-        )}
-        {index === listMessage.length - 1 ? (
-          <div className="main">
-            <MessageItem item={item} />
-          </div>
-        ) : (
-          <div className="main">
-            <MessageItem item={item} />
-          </div>
+        {chatGroupUser && (
+          <>
+            {/* // HIDE AVATAR IF MESSAGE HAVE SENDER === PREVIOUS SENDER */}
+            {index > 0 && item.sender === arr[index - 1].sender ? (
+              <div className="avatar" style={{ opacity: '0' }}>
+                <img src={chatGroupUser.idUser.avatar} alt="avatar"></img>
+              </div>
+            ) : (
+              <div className="avatar">
+                <img src={chatGroupUser.idUser.avatar} alt="avatar"></img>
+              </div>
+            )}
+            {index === listMessage.length - 1 ? (
+              <div className="main">
+                <MessageItem item={item} />
+              </div>
+            ) : (
+              <div className="main">
+                <MessageItem item={item} />
+              </div>
+            )}
+          </>
         )}
       </>
     );

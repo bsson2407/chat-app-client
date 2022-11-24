@@ -1,4 +1,5 @@
 // import { Email } from '../types/UserTypes';
+import { Conversation } from '../types/ChatTypes';
 import { Friend, refeshToken } from '../types/UserTypes';
 import axiosClient from './AxiosClient';
 
@@ -50,6 +51,8 @@ export const addFriend = (data: any): Promise<User> =>
   axiosClient.post('/user/invite', data);
 export const updateProfile = (data: any): Promise<User> =>
   axiosClient.post('/user/update', data);
+export const unFriend = (data: any): Promise<Conversation> =>
+  axiosClient.post('/user/unfriend', data);
 export const getEmail = (email: Email): Promise<resultGetEmail> =>
   axiosClient.post('/user/sendmail', email);
 export const checkOtp = (otp: OTP): Promise<resultGetEmail> =>

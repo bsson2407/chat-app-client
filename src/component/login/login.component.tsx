@@ -58,6 +58,13 @@ const Login = () => {
           <div className="login_main_content">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="login_form_input">
+                {/* <label
+                  className={`${
+                    repeatPass.length ? 'shrink' : ''
+                  } form-input-label`}
+                >
+                  Nhập lại mật khẩu
+                </label> */}
                 <input
                   type="text"
                   placeholder="Nhập email"

@@ -156,24 +156,6 @@ const CreateGroup = ({ open, handleClose }: any) => {
                 )}
               </div>
             </div>
-            {/* <div className="added">
-              <div className="count">
-                Đã chọn <span>9/100</span>
-              </div>
-              <div className="added_list">
-                <div className="added_list_item">
-                  <div className="avatar">
-                     <img src={avatar}></img>
-                  </div>
-                  <div className="name">Cao Kha HieuCao Kha Hieu</div>
-                  <div className="close">
-                    <span>
-                      <i className="fal fa-times-circle"></i>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div> */}
           </div>
 
           <div className="btn">

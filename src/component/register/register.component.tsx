@@ -40,6 +40,8 @@ const Register = () => {
   // }, []);
 
   const [pass, setPass] = useState<string>('');
+  const [name, setName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [repeatPass, setRepeatPass] = useState<string>('');
   const [countDown, setCountDown] = useState<Boolean>(false);
@@ -82,18 +84,32 @@ const Register = () => {
             <div className="register_title">Đăng kí tài khoản HiChat</div>
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="register_form_input">
+                <label
+                  className={`${name.length ? 'shrink' : ''} form-input-label`}
+                >
+                  Họ và tên
+                </label>
                 <input
                   type="text"
-                  placeholder="Họ và tên"
                   required
                   {...register('name')}
+                  onChange={(e: FormEvent<HTMLInputElement>) =>
+                    setName(e.currentTarget.value)
+                  }
                 ></input>
               </div>
               <div className="register_form_input">
+                <label
+                  className={`${email.length ? 'shrink' : ''} form-input-label`}
+                >
+                  Email
+                </label>
                 <input
                   type="text"
-                  placeholder="Email"
                   {...register('email')}
+                  onChange={(e: FormEvent<HTMLInputElement>) =>
+                    setEmail(e.currentTarget.value)
+                  }
                 ></input>
 
                 {errors ? (
@@ -105,9 +121,13 @@ const Register = () => {
                 )}
               </div>
               <div className="register_form_input">
+                <label
+                  className={`${pass.length ? 'shrink' : ''} form-input-label`}
+                >
+                  Mật khẩu
+                </label>
                 <input
                   type="password"
-                  placeholder="Mật khẩu"
                   {...register('password')}
                   onChange={(e: FormEvent<HTMLInputElement>) =>
                     setPass(e.currentTarget.value)
@@ -124,9 +144,15 @@ const Register = () => {
                 )}
               </div>
               <div className="register_form_input">
+                <label
+                  className={`${
+                    repeatPass.length ? 'shrink' : ''
+                  } form-input-label`}
+                >
+                  Nhập lại mật khẩu
+                </label>
                 <input
                   type="password"
-                  placeholder="Nhập lại mật khẩu"
                   onChange={(e: FormEvent<HTMLInputElement>) =>
                     setRepeatPass(e.currentTarget.value)
                   }

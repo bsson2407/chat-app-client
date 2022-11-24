@@ -11,6 +11,7 @@ import {
 } from '../types/UserTypes';
 
 import { Actions } from '../types/CommonTypes';
+import { getCurrentSocket } from '../reducers/SocketReducer';
 
 // -------------- LOGIN
 export const loginUserRequest = (data: UserData, callback: any): Actions => {
@@ -120,7 +121,27 @@ export const searchUserExistFailure = (error: Message) => {
     payload: error,
   };
 };
-
+// -------------- CREATE GROUP
+export const unFriendRequest = (data: any) => {
+  return {
+    type: UserTypes.UN_FRIEND_REQUEST,
+    payload: data,
+  };
+};
+export const unFriendSuccess = (data: any) => {
+  console.log('unFriend', data);
+  getCurrentSocket().emit('unFriend', data);
+  return {
+    type: UserTypes.UN_FRIEND_SUCCESS,
+    payload: data,
+  };
+};
+export const unFriendFailure = (message: Message) => {
+  return {
+    type: UserTypes.UN_FRIEND_FAILURE,
+    payload: message,
+  };
+};
 // -------------- CHECK OTP
 export const checkOtpRequest = (data: OTP, callback: any): Actions => {
   return {
