@@ -42,7 +42,6 @@ const AddFriend = ({ open, handleClose }: any) => {
     dispatch(searchUserRequest(data));
     setList(true);
   };
-  console.log('resultSearch', resultSearch);
 
   useEffect(() => {
     if (resultSearch) {
@@ -59,23 +58,14 @@ const AddFriend = ({ open, handleClose }: any) => {
       const isMe = resultSearch._id === userCurrent._id;
 
       if (isFriend) {
-        console.log(1);
         dispatch(isFriendAction());
       } else if (requested) {
-        console.log(2);
-
         dispatch(isMyRequestAction());
       } else if (isPeopleRequest) {
-        console.log(3);
-
         dispatch(isPeopleRequestAction());
       } else if (isMe) {
-        console.log(4);
-
         dispatch(isMeAction());
       } else {
-        console.log(5);
-
         dispatch(isStrangerAction());
       }
     }
@@ -83,7 +73,6 @@ const AddFriend = ({ open, handleClose }: any) => {
 
   useEffect(() => {
     socket.on('requestAddFriendToClient', (data: any) => {
-      console.log('setStatusResult');
       dispatch(isMyRequestAction());
     });
     return () => socket.off('requestAddFriendToClient');

@@ -1,17 +1,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  getAllPeopleRequestRequest,
-  getUserByIdRequest,
-} from '../../redux/actions/UserAction';
+import { getAllPeopleRequestRequest } from '../../redux/actions/UserAction';
 import { RootState } from '../../redux/reducers';
 import { FriendItem } from '../../redux/types/UserTypes';
 import './request-friend.styles.scss';
-
-type Data = {
-  userFrom: string;
-  userTo: string;
-};
 
 const RequestFriend = () => {
   const dispatch = useDispatch();

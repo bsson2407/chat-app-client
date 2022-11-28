@@ -129,7 +129,6 @@ export const unFriendRequest = (data: any) => {
   };
 };
 export const unFriendSuccess = (data: any) => {
-  console.log('unFriend', data);
   getCurrentSocket().emit('unFriend', data);
   return {
     type: UserTypes.UN_FRIEND_SUCCESS,

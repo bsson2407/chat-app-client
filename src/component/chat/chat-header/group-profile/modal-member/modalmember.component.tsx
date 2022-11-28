@@ -24,8 +24,7 @@ const ModalMember = ({ open, handleClose }: any) => {
 
   // const [initalFriend, setInitalFriend] = useState<any>([]);
   const handleShowMenu = (e: any) => {
-    console.log(e);
-    setShowMenu((a) => !a);
+    setShowMenu((a: any) => !a);
     setShowId(e);
   };
 

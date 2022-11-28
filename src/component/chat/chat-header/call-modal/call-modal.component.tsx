@@ -19,8 +19,6 @@ const CallModal = () => {
   const { call, peer, socket }: any = useSelector<RootState>((state) => state);
   const { userCurrent }: any = useSelector<RootState>((state) => state.user);
   const { chatWith }: any = useSelector<RootState>((state) => state.chat);
-  console.log('peerCall', peer);
-  console.log('callCall', call);
   const [hours, setHours] = useState(0);
   const [mins, setMins] = useState<number>(0);
   const [second, setSecond] = useState<number>(0);
@@ -125,7 +123,6 @@ const CallModal = () => {
   // Answer Call
   const handleAnswer = () => {
     openStream(call.video).then((stream) => {
-      console.log(call.peerId);
       playStream(youVideo.current, stream);
       const track = stream.getTracks();
       setTracks(track);

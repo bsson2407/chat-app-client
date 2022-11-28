@@ -27,12 +27,14 @@
     border-radius: 10px;
     padding: 0 0.8rem;
     min-width: 50px;
+    width: auto;
 
     .name {
       margin-top: 10px;
       color: #72808e;
       font-size: 13px;
     }
+
     .image {
       width: 100%;
       height: 100%;
@@ -141,7 +143,7 @@
 
     &_item {
       display: flex;
-      width: 80%;
+      width: 51%;
       gap: 10px;
       margin-bottom: 1rem;
       padding-left: 1rem;
@@ -151,7 +153,7 @@
     &_item_me {
       display: flex;
       flex-direction: row-reverse;
-      width: 80%;
+      width: 51%;
       float: right;
       gap: 10px;
       margin-bottom: 1rem;

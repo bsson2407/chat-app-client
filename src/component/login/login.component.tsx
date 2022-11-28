@@ -10,7 +10,9 @@ import { RootState } from '../../redux/reducers';
 import { UserData, UserState } from '../../redux/types/UserTypes';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-
+import { FormEvent, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons';
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -35,7 +37,9 @@ const Login = () => {
 
   const user: UserState = useSelector((state: RootState) => state.user);
   const { error } = user;
-
+  const [email, setEmail] = useState('');
+  const [seen, setSeen] = useState(false);
+  const [password, setPassword] = useState('');
   const handleClearUserState = (): void => {
     dispatch(clearUserState());
   };
@@ -57,26 +61,27 @@ const Login = () => {
         <div className="login_main">
           <div className="login_main_content">
             <form onSubmit={handleSubmit(onSubmit)}>
+              <img
+                style={{ height: '150px', width: '150px' }}
+                src="images/logo.png"
+                alt=""
+              />
               <div className="login_form_input">
-                {/* <label
+                <label
                   className={`${
-                    repeatPass.length ? 'shrink' : ''
-                  } form-input-label`}
+                    email.length ? 'shrink' : ''
+                  } login_form_input-label`}
                 >
-                  Nhập lại mật khẩu
-                </label> */}
+                  Email
+                </label>
                 <input
                   type="text"
-                  placeholder="Nhập email"
                   {...register('email')}
-                  // onChange={(e: FormEvent<HTMLInputElement>) =>
-                  //   setEmail(e.currentTarget.value)
-                  // }
+                  onChange={(e: FormEvent<HTMLInputElement>) =>
+                    setEmail(e.currentTarget.value)
+                  }
                   required
                 ></input>
-                <span>
-                  {/* <FontAwesomeIcon icon={faMobileAlt}></FontAwesomeIcon> */}
-                </span>
               </div>
               {errors ? (
                 <div className="error">
@@ -86,18 +91,29 @@ const Login = () => {
                 ''
               )}
               <div className="login_form_input">
+                <label
+                  className={`${
+                    password.length ? 'shrink' : ''
+                  } login_form_input-label`}
+                >
+                  Mật khẩu
+                </label>
                 <input
-                  type="password"
-                  placeholder="Mật khẩu"
+                  type={seen ? 'text' : 'password'}
                   {...register('password')}
-                  // onChange={(e: FormEvent<HTMLInputElement>) =>
-                  //   setPassword(e.currentTarget.value)
-                  // }
+                  onChange={(e: FormEvent<HTMLInputElement>) =>
+                    setPassword(e.currentTarget.value)
+                  }
                   required
                 ></input>
-                <span>
-                  {/* <FontAwesomeIcon icon={faLock}></FontAwesomeIcon> */}
+                <span className="icon-login" onClick={() => setSeen(!seen)}>
+                  {seen ? (
+                    <FontAwesomeIcon icon={faEye}></FontAwesomeIcon>
+                  ) : (
+                    <FontAwesomeIcon icon={faEyeSlash}></FontAwesomeIcon>
+                  )}
                 </span>
+
                 {error ? <div className="error">{error}</div> : ''}
               </div>
               <button className="btn_login">Đăng nhập</button>

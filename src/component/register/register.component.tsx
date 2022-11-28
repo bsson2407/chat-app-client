@@ -14,6 +14,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import './register.styles.scss';
 import OTPRegister from './otp-register.component';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons';
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -27,6 +29,9 @@ const Register = () => {
       ),
     password: yup.string().min(8, 'Mật khẩu phải trên 8 kí tự'),
   });
+  const [seen, setSeen] = useState(false);
+  const [seenPass, setSeenPass] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -83,6 +88,11 @@ const Register = () => {
           <>
             <div className="register_title">Đăng kí tài khoản HiChat</div>
             <form onSubmit={handleSubmit(onSubmit)}>
+              <img
+                style={{ height: '150px', width: '150px' }}
+                src="images/logo.png"
+                alt=""
+              />
               <div className="register_form_input">
                 <label
                   className={`${name.length ? 'shrink' : ''} form-input-label`}
@@ -127,12 +137,22 @@ const Register = () => {
                   Mật khẩu
                 </label>
                 <input
-                  type="password"
+                  type={seenPass ? 'text' : 'password'}
                   {...register('password')}
                   onChange={(e: FormEvent<HTMLInputElement>) =>
                     setPass(e.currentTarget.value)
                   }
                 ></input>
+                <span
+                  onClick={() => setSeenPass(!seenPass)}
+                  className="icon_register"
+                >
+                  {seenPass ? (
+                    <FontAwesomeIcon icon={faEye}></FontAwesomeIcon>
+                  ) : (
+                    <FontAwesomeIcon icon={faEyeSlash}></FontAwesomeIcon>
+                  )}
+                </span>
                 {errors.password ? (
                   <div className="error">
                     {errors.password?.message
@@ -152,11 +172,18 @@ const Register = () => {
                   Nhập lại mật khẩu
                 </label>
                 <input
-                  type="password"
+                  type={seen ? 'text' : 'password'}
                   onChange={(e: FormEvent<HTMLInputElement>) =>
                     setRepeatPass(e.currentTarget.value)
                   }
                 ></input>
+                <span onClick={() => setSeen(!seen)} className="icon_register">
+                  {seen ? (
+                    <FontAwesomeIcon icon={faEye}></FontAwesomeIcon>
+                  ) : (
+                    <FontAwesomeIcon icon={faEyeSlash}></FontAwesomeIcon>
+                  )}
+                </span>
 
                 {errorMessage ? (
                   <div className="error">{errorMessage}</div>

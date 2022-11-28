@@ -100,7 +100,7 @@ const ModalAddMember = ({ open, handleClose }: any) => {
       <DialogContent>
         <form className="dialog-add-member" onSubmit={handleSubmit(onSubmit)}>
           <div className="title">
-            <span>Thành viên nhóm</span>
+            <span>Thêm thành viên nhóm</span>
             <div className="close" onClick={() => handleClose()}></div>
           </div>
 

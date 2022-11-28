@@ -304,15 +304,6 @@ export const UserReducer = (state = initialState, action: UserLoginAction) => {
           isLoading: false,
         };
       }
-      // console.log('GET_USER_BY_ID_SUCCESS', userData);
-      // console.log(
-      //   'GET_USER_BY_ID_SUCCESS',
-      //   state.userCurrent._id === userData._id
-      // );
-
-      // if (state.userCurrent._id === userData._id) {
-      //   return;
-      // }
     }
     case UserTypes.GET_USER_BY_ID_FAILURE: {
       return {

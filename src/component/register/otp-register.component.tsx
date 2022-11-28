@@ -50,6 +50,19 @@ const OTPRegister = ({ password }: any) => {
 
   return (
     <div className="otp-register">
+      <div className="title">
+        <img
+          style={{
+            height: '150px',
+            width: '150px',
+            textAlign: 'center',
+            justifyItems: 'center',
+            justifyContent: 'center',
+          }}
+          src="images/logo.png"
+          alt=""
+        />
+      </div>
       <div className="title">Xác nhận tài khoản</div>
       <div
         style={{

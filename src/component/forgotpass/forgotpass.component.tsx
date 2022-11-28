@@ -57,6 +57,11 @@ const ForgotPass = () => {
             <div className="login_main">
               <div className="login_main_content">
                 <form onSubmit={handleSubmit(onSubmit)}>
+                  <img
+                    style={{ height: '150px', width: '150px' }}
+                    src="images/logo.png"
+                    alt=""
+                  />
                   <li>Nhập email để nhận mã xác thực</li>
                   <div className="login_form_input">
                     <input

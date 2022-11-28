@@ -58,7 +58,6 @@ export const chatReducer = (state = initialState, action: Actions) => {
 
     // -------------------- PUSH NEW MESSAGE TO LIST MESSAGE
     case ChatTypes.PUSH_NEW_MESSAGE_TO_LIST_MESSAGE: {
-      console.log('newListMessage', action.payload);
       const newListMessage = [...state.listMessage];
       newListMessage.push(action.payload);
       return {

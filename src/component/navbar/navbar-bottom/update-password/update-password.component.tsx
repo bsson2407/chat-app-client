@@ -36,7 +36,6 @@ const UpdatePassword = ({ open, handleClose }: Update) => {
   const { userCurrent }: any = useSelector<RootState>((state) => state.user);
   const [pass, setPass] = useState<string>('');
   const [newPass, setNewPass] = useState<string>('');
-
   const [repeatPass, setRepeatPass] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const onSubmit = async (data: Password) => {

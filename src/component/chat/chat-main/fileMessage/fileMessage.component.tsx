@@ -15,8 +15,6 @@ const FileMessage = ({ fileUrl, message }: any) => {
   };
 
   const showViewFile = (file: any) => {
-    // console.log(setPathFile(file.split(':')[file.split(':').length + 1]));
-    console.log(file);
     return (
       <Modal
         open={viewFile}

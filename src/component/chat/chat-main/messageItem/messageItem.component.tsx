@@ -14,9 +14,11 @@ const MessageItem = ({ item }: MessageItem) => {
   return (
     <div className="message-item">
       {item.type === 'IMAGE' ? (
-        item.urlImage.map((url, index) => {
-          return <img className="image" alt="img" src={url} key={index} />;
-        })
+        <div className="img_container">
+          {item.urlImage.map((url, index) => {
+            return <img className="image" alt="img" src={url} key={index} />;
+          })}
+        </div>
       ) : item.type === 'TEXT' ? (
         <div className="text">{item.message}</div>
       ) : item.type === 'VIDEO' ? (

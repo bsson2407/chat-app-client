@@ -4,7 +4,10 @@ import { useState, FormEvent } from 'react';
 import './new-password.styles.scss';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { updatePasswordRequest } from '../../redux/actions/UserAction';
+import {
+  loginUserRequest,
+  updatePasswordRequest,
+} from '../../redux/actions/UserAction';
 import { useNavigate } from 'react-router-dom';
 // import {useNavi}
 
@@ -36,7 +39,15 @@ const NewPassword = () => {
         };
         dispatch(
           updatePasswordRequest(newData, () => {
-            navigate('/login');
+            const dataLogin = {
+              email: JSON.parse(email).email,
+              password: pass,
+            };
+            dispatch(
+              loginUserRequest(dataLogin, () => {
+                navigate('/');
+              })
+            );
           })
         );
       }
@@ -53,6 +64,19 @@ const NewPassword = () => {
       <div className="title">Khôi phục mật khẩu HiChat</div>
 
       <form className="pass" onSubmit={handleSubmit(onSubmit)}>
+        <div
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            display: 'flex',
+          }}
+        >
+          <img
+            style={{ height: '150px', width: '150px', alignItems: 'center' }}
+            src="images/logo.png"
+            alt=""
+          />
+        </div>
         <div className="pass_input">
           <input
             type="password"

@@ -26,7 +26,6 @@ const ChatFooter = (props: any) => {
   const handleSubmitForm = async (e: any) => {
     e.preventDefault();
     // const formData = new FormData();
-    console.log('message.trim().length', message.trim().length);
     if (message.trim()) {
       const data = {
         idConversation: chatWith.idConversation,
@@ -93,7 +92,6 @@ const ChatFooter = (props: any) => {
       for (const fileImage of files) {
         if (fileImage) {
           formData.append('files', fileImage);
-          console.log('fileImage', fileImage);
         }
       }
       dispatch(sendImagesRequest(formData));

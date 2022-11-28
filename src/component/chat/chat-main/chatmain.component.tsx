@@ -66,7 +66,6 @@ const ChatMain = () => {
   }, []);
 
   const renderMessageMe = (item: IMessage, index: number, arr: IMessage[]) => {
-    // console.log(item);
     const flag = item.deleteBy?.findIndex(
       (userIdele) => userIdele == userCurrent._id
     );
@@ -174,31 +173,66 @@ const ChatMain = () => {
         // itemUser.idUser._id === item.sender;
         item.sender === itemUser.idUser._id
     );
-    console.log('chatGroupUser', chatGroupUser);
+    const flag = item.deleteBy?.findIndex(
+      (userIdele) => userIdele == userCurrent._id
+    );
     return (
       <>
-        {chatGroupUser && (
-          <>
-            {/* // HIDE AVATAR IF MESSAGE HAVE SENDER === PREVIOUS SENDER */}
-            {index > 0 && item.sender === arr[index - 1].sender ? (
-              <div className="avatar" style={{ opacity: '0' }}>
-                <img src={chatGroupUser.idUser.avatar} alt="avatar"></img>
-              </div>
-            ) : (
-              <div className="avatar">
-                <img src={chatGroupUser.idUser.avatar} alt="avatar"></img>
-              </div>
+        {flag === -1 ? (
+          <div>
+            {chatGroupUser && (
+              <>
+                {/* // HIDE AVATAR IF MESSAGE HAVE SENDER === PREVIOUS SENDER */}
+                {index > 0 && item.sender === arr[index - 1].sender ? (
+                  <div className="avatar" style={{ opacity: '0' }}>
+                    <img src={chatGroupUser.idUser.avatar} alt="avatar"></img>
+                  </div>
+                ) : (
+                  <div className="avatar">
+                    <img src={chatGroupUser.idUser.avatar} alt="avatar"></img>
+                  </div>
+                )}
+                <TippyHeadless
+                  placement="right-end"
+                  interactive
+                  // placement="bottom-start"
+                  // offset={[-74, -18]} // 10 4
+                  delay={[200, 100]}
+                  appendTo={() => document.body}
+                  render={(attrs) => (
+                    <div tabIndex={-1} {...attrs}>
+                      <Card className="me_menu_list">
+                        <div className="tippy-options">
+                          <Tippy
+                            className="tippy-item"
+                            content="Xóa"
+                            delay={[200, 0]}
+                          >
+                            <button onClick={() => deleteMessageOnlyMe(item)}>
+                              <FontAwesomeIcon icon={faTrashArrowUp} />
+                            </button>
+                          </Tippy>
+                          {/* Menu children */}
+                        </div>
+                      </Card>
+                    </div>
+                  )}
+                >
+                  {index === listMessage.length - 1 ? (
+                    <div className="main">
+                      <MessageItem item={item} />
+                    </div>
+                  ) : (
+                    <div className="main">
+                      <MessageItem item={item} />
+                    </div>
+                  )}
+                </TippyHeadless>
+              </>
             )}
-            {index === listMessage.length - 1 ? (
-              <div className="main">
-                <MessageItem item={item} />
-              </div>
-            ) : (
-              <div className="main">
-                <MessageItem item={item} />
-              </div>
-            )}
-          </>
+          </div>
+        ) : (
+          ''
         )}
       </>
     );

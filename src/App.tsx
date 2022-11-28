@@ -2,12 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 import './App.scss';
-import ForgotPass from './component/forgotpass/forgotpass.component';
-import Login from './component/login/login.component';
-import NewPassword from './component/newpass/new-password.component';
-import Otp from './component/otp/otp.component';
-import OTPRegister from './component/register/otp-register.component';
-import Register from './component/register/register.component';
+
 import ForgotPasspage from './pages/forgot-pass-page/forgot-pass-page';
 import HomePage from './pages/home-page/home-page.component';
 import LoginPage from './pages/login/login-page.component';
@@ -16,6 +11,7 @@ import Peer from 'peerjs';
 import { RootState } from './redux/reducers';
 import { ActionTypes } from './redux/types/ActionTypes';
 import CallModal from './component/chat/chat-header/call-modal/call-modal.component';
+import NewPasswordPage from './pages/newPassword/newPassword.component';
 
 function App() {
   const dispatch = useDispatch();
@@ -63,7 +59,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgotpass" element={<ForgotPasspage />} />
-        <Route path="/newpass" element={<NewPassword />} />
+        <Route path="/newpass" element={<NewPasswordPage />} />
       </Routes>
     </>
   );

@@ -23,11 +23,7 @@ import {
 } from '../../redux/actions/ChatAction';
 import { GroupItem } from '../../redux/types/UserTypes';
 import { IMessage } from '../../redux/types/ChatTypes';
-import { offShow } from '../../redux/actions/OptionLayoutAction';
-type Data = {
-  userFrom: string;
-  userTo: string;
-};
+
 const HomePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -103,7 +99,6 @@ const HomePage = () => {
 
   // useEffect(() => {
   //   socket.on('newMessage', (data: any) => {
-  //     console.log('newMessageHomePage');
   //     dispatch(getAllConversationByUserRequest(userCurrent._id));
   //     dispatch(getAllMessageByConversationRequest(data._id));
   //     // dispatch(saveInfoChatWith(data));
@@ -114,7 +109,6 @@ const HomePage = () => {
 
   useEffect(() => {
     socket.on('newMessage', (newMessage: IMessage) => {
-      console.log('newMessageHome', newMessage);
       dispatch(getAllConversationByUserRequest(userCurrent._id));
       if (chatWith.idConversation === newMessage.idConversation) {
         dispatch(pushNewMesssgeToListMessage(newMessage));
@@ -185,7 +179,6 @@ const HomePage = () => {
 
   useEffect(() => {
     socket.on('unFriendToClient', (data: any) => {
-      console.log('unFriendToClient');
       dispatch(getAllConversationByUserRequest(userCurrent._id));
       dispatch(getUserByIdRequest(userCurrent._id));
     });
@@ -224,11 +217,9 @@ const HomePage = () => {
     });
     return () => socket.off('kickMemberOutGroupToDeleteUser');
   }, [userCurrent]);
-  // console.log(chatWith);
   useEffect(() => {
     socket.on('addMemberToGroupToClient', (data: GroupItem) => {
       dispatch(getAllConversationByUserRequest(userCurrent._id));
-      console.log(chatWith.idConversation === data.idConversation);
       if (chatWith.idConversation === data.idConversation) {
         dispatch(getAllMessageByConversationRequest(data._id));
         dispatch(saveInfoChatWith(data));
@@ -258,10 +249,11 @@ const HomePage = () => {
           <Chat
           // onOPClick={handleOtherProfile}
           ></Chat>
+        ) : showFriends ? (
+          <RequestFriend></RequestFriend>
         ) : (
-          ''
+          <img className="img-home" src="images/background.png" alt="" />
         )}
-        {showFriends ? <RequestFriend></RequestFriend> : ''}
       </main>
       {showOtherProfile && chatWith.type === 'single' ? (
         <OtherProfile></OtherProfile>

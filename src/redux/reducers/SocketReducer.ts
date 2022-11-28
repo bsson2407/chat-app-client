@@ -2,7 +2,8 @@
 import { io } from 'socket.io-client';
 
 // const ENDPOINT: string = 'http://localhost:5000';
-const ENDPOINT: string = 'https://chap-app-cnmoi.herokuapp.com';
+const ENDPOINT: string =
+  'https://chat-app-server-production-370f.up.railway.app';
 // https://chap-app-cnmoi.herokuapp.com/
 let socket: any = null;
 
